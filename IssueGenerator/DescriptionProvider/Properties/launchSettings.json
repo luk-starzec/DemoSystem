@@ -1,0 +1,14 @@
+﻿{
+  "profiles": {
+    "DescriptionProvider": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "launchUrl": "healthz",
+      "applicationUrl": "http://localhost:6030;https://localhost:6031",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
