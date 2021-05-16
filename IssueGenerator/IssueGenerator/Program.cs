@@ -1,8 +1,13 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DescriptionProvider
+namespace IssueGenerator
 {
     public class Program
     {
@@ -15,10 +20,6 @@ namespace DescriptionProvider
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    //webBuilder.ConfigureKestrel(options =>
-                    //{
-                    //    options.ConfigureEndpointDefaults(r => r.Protocols = HttpProtocols.Http1AndHttp2);
-                    //});
                     webBuilder.UseStartup<Startup>();
                 });
     }
