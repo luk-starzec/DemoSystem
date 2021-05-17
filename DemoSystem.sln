@@ -15,9 +15,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTitleFirstPartProvider",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SenderProvider", "IssueGenerator\SenderProvider\SenderProvider.csproj", "{C1F5D95E-2C9E-486E-82A2-7BE27C305AC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IssueGenerator", "IssueGenerator\IssueGenerator\IssueGenerator.csproj", "{5C178D91-94ED-497D-9718-1FACF2A32CC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IssueGenerator", "IssueGenerator\IssueGenerator\IssueGenerator.csproj", "{5C178D91-94ED-497D-9718-1FACF2A32CC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMonitoring", "HealthMonitoring\HealthMonitoring.csproj", "{BDA6A543-E27D-4FA9-9244-3086B06F3F8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthMonitoring", "HealthMonitoring\HealthMonitoring.csproj", "{BDA6A543-E27D-4FA9-9244-3086B06F3F8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PrioritySetter", "PrioritySetter", "{933CF238-C226-446B-9754-DE68FDECE81D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{504ADE32-52B6-49A7-8733-F204B5B0E995}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrioritySetter", "PrioritySetter\PrioritySetter\PrioritySetter.csproj", "{F9CC3D7D-61AC-47F6-B039-53106400EDFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "EventBus\EventBus\EventBus.csproj", "{472248CA-71FF-4FBC-A48A-B6100C9D6799}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{F19DEC08-9E5C-4029-8A1B-8668BD47628F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +63,18 @@ Global
 		{BDA6A543-E27D-4FA9-9244-3086B06F3F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDA6A543-E27D-4FA9-9244-3086B06F3F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDA6A543-E27D-4FA9-9244-3086B06F3F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9CC3D7D-61AC-47F6-B039-53106400EDFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9CC3D7D-61AC-47F6-B039-53106400EDFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9CC3D7D-61AC-47F6-B039-53106400EDFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9CC3D7D-61AC-47F6-B039-53106400EDFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{472248CA-71FF-4FBC-A48A-B6100C9D6799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{472248CA-71FF-4FBC-A48A-B6100C9D6799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{472248CA-71FF-4FBC-A48A-B6100C9D6799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{472248CA-71FF-4FBC-A48A-B6100C9D6799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F19DEC08-9E5C-4029-8A1B-8668BD47628F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F19DEC08-9E5C-4029-8A1B-8668BD47628F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F19DEC08-9E5C-4029-8A1B-8668BD47628F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F19DEC08-9E5C-4029-8A1B-8668BD47628F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +85,9 @@ Global
 		{A3BF0C05-B63B-4C2A-B4C2-1C6D6D228FA7} = {544AF440-2395-4F0C-8F10-E9E13439FEA4}
 		{C1F5D95E-2C9E-486E-82A2-7BE27C305AC4} = {544AF440-2395-4F0C-8F10-E9E13439FEA4}
 		{5C178D91-94ED-497D-9718-1FACF2A32CC0} = {544AF440-2395-4F0C-8F10-E9E13439FEA4}
+		{F9CC3D7D-61AC-47F6-B039-53106400EDFA} = {933CF238-C226-446B-9754-DE68FDECE81D}
+		{472248CA-71FF-4FBC-A48A-B6100C9D6799} = {504ADE32-52B6-49A7-8733-F204B5B0E995}
+		{F19DEC08-9E5C-4029-8A1B-8668BD47628F} = {504ADE32-52B6-49A7-8733-F204B5B0E995}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8489D025-AB1A-4A19-B571-5EC78A67FA01}

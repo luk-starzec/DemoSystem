@@ -15,6 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\..\EventBus\EventBus\EventBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\description.proto" GrpcServices="Client" />
   </ItemGroup>
 
