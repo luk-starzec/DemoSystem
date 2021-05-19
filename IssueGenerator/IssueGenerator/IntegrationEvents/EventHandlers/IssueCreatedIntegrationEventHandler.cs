@@ -11,7 +11,7 @@ namespace IssueGenerator.IntegrationEvents.EventHandlers
     {
         public Task Handle(IssueCreatedIntegrationEvent @event)
         {
-            Console.WriteLine($"Recived: {@event.Title}");
+            Console.WriteLine($"Recived: {@event.Issue.Title}");
             return Task.CompletedTask;
         }
     }

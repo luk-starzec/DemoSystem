@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EventBus
+﻿namespace EventBus
 {
     public interface IEventBus
     {
@@ -15,6 +11,5 @@ namespace EventBus
         void Unsubscribe<T, TH>()
             where TH : IIntegrationEventHandler<T>
             where T : IntegrationEvent;
-
     }
 }

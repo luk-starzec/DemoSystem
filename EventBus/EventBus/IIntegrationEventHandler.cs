@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace EventBus
 {
-    public interface IIntegrationEventHandler<in TIntegrationEvent> : IIntegrationEventHandler
+    public interface IIntegrationEventHandler<in TIntegrationEvent>
         where TIntegrationEvent : IntegrationEvent
     {
         Task Handle(TIntegrationEvent @event);
-    }
-
-    public interface IIntegrationEventHandler
-    {
     }
 }

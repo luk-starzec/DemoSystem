@@ -1,7 +1,9 @@
-using Autofac;
+using BasicIntegrationEventService;
 using EventBus;
 using EventBusRabbitMQ;
+using Google.Protobuf.WellKnownTypes;
 using HealthChecks.UI.Client;
+using HealthChecksHelper;
 using IssueGenerator.IntegrationEvents;
 using IssueGenerator.IntegrationEvents.EventHandlers;
 using IssueGenerator.IntegrationEvents.Events;
@@ -15,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,7 +42,7 @@ namespace IssueGenerator
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ServicesSettings>(Configuration.GetSection(ServicesSettings.ServicesSettingsKey));
-            services.Configure<EventBusSettings>(Configuration.GetSection(EventBusSettings.EventBusSettingsKey));
+            services.Configure<EventBusRabbitMQSettings>(Configuration.GetSection(EventBusRabbitMQSettings.EventBusSettingsKey));
 
             services.AddTransient<IHeaderService, HeaderService>();
             services.AddTransient<IDescriptionService, DescriptionService>();
@@ -49,38 +52,13 @@ namespace IssueGenerator
             services.AddHttpClient<HeaderService>();
             services.AddHttpClient<SenderService>();
 
-            services.AddTransient<IIntegrationEventService, IntegrationEventService>();
-            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            var eventBusSettings = Configuration.GetSection(EventBusRabbitMQSettings.EventBusSettingsKey).Get<EventBusRabbitMQSettings>();
+            services.AddEventBus(eventBusSettings);
+
+            services.AddIntegrationEvents(new System.Type[]
             {
-                var settings = sp.GetRequiredService<IOptions<EventBusSettings>>().Value;
-
-                var factory = new ConnectionFactory()
-                {
-                    Uri = new Uri(settings.Connection),
-                    //UserName = settings.UserName,
-                    //Password = settings.Password,
-                    DispatchConsumersAsync = true
-                };
-
-                var retryCount = settings.RetryCount > 0 ? settings.RetryCount : 5;
-
-                return new RabbitMQPersistentConnection(factory, retryCount);
+                typeof(IssueCreatedIntegrationEventHandler)
             });
-
-            services.AddSingleton<IEventBus, EventBusRabbitMQ.EventBusRabbitMQ>(sp =>
-            {
-                var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
-                var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
-
-                var settings = sp.GetRequiredService<IOptions<EventBusSettings>>().Value;
-                var retryCount = settings.RetryCount > 0 ? settings.RetryCount : 5;
-
-                return new EventBusRabbitMQ.EventBusRabbitMQ(rabbitMQPersistentConnection, eventBusSubcriptionsManager, sp, settings.SubscriptionClientName, retryCount);
-            });
-            services.AddSingleton<IEventBusSubscriptionsManager, EventBusSubscriptionsManager>();
-
-            services.AddTransient<IssueCreatedIntegrationEventHandler>();
-
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -88,7 +66,7 @@ namespace IssueGenerator
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "IssueGenerator", Version = "v1" });
             });
 
-            services.AddHealthChecks();
+            services.AddCustomHealthChecks(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -109,11 +87,7 @@ namespace IssueGenerator
                 endpoints.MapControllers();
             });
 
-            app.UseHealthChecks("/health");
-            app.UseHealthChecks("/healthz", new HealthCheckOptions
-            {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
+            app.UseCustomHealthChecks();
 
             ConfigureEventBus(app);
         }
@@ -121,8 +95,35 @@ namespace IssueGenerator
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            eventBus.Subscribe<IssueCreatedIntegrationEvent, IssueCreatedIntegrationEventHandler>();
+            //eventBus.Subscribe<IssueCreatedIntegrationEvent, IssueCreatedIntegrationEventHandler>();
         }
 
+    }
+
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+            var hcBuilder = services.AddHealthChecks();
+
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy(),
+                tags: new string[]
+                {
+                    CustomHealthChecksDefaultOptions.StartupTag,
+                    CustomHealthChecksDefaultOptions.LivenessTag,
+                    CustomHealthChecksDefaultOptions.ReadinessTag,
+                });
+
+            var connection =
+                configuration[$"{EventBusRabbitMQSettings.EventBusSettingsKey}:{nameof(EventBusRabbitMQSettings.Connection)}"];
+            hcBuilder
+                .AddRabbitMQ(connection, name: "rabbitmq-check",
+                    tags: new string[] {
+                        CustomHealthChecksDefaultOptions.StartupTag,
+                        CustomHealthChecksDefaultOptions.ReadinessTag,
+                    });
+
+            return services;
+        }
     }
 }

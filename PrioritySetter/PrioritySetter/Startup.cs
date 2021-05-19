@@ -1,13 +1,22 @@
+using BasicIntegrationEventService;
+using EventBus;
+using EventBusRabbitMQ;
+using HealthChecksHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PrioritySetter.Data;
+using PrioritySetter.IntegrationEvents;
+using PrioritySetter.IntegrationEvents.EventHandlers;
+using PrioritySetter.IntegrationEvents.Events;
+using PrioritySetter.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +40,23 @@ namespace PrioritySetter
                 options.UseSqlite("Data Source = prioritySetterDb.db");
             });
 
+            services.AddTransient<IPriorityService, PriorityService>();
+
+            var eventBusSettings = Configuration.GetSection(EventBusRabbitMQSettings.EventBusSettingsKey).Get<EventBusRabbitMQSettings>();
+            services.AddEventBus(eventBusSettings);
+
+            services.AddIntegrationEvents(new Type[]
+            {
+                typeof(IssueCreatedIntegrationEventHandler)
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PrioritySetter", Version = "v1" });
             });
+
+            services.AddCustomHealthChecks(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,6 +76,44 @@ namespace PrioritySetter
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCustomHealthChecks();
+
+            ConfigureEventBus(app);
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<IssueCreatedIntegrationEvent, IssueCreatedIntegrationEventHandler>();
         }
     }
+
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+            var hcBuilder = services.AddHealthChecks();
+
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy(),
+                tags: new string[]
+                {
+                    CustomHealthChecksDefaultOptions.StartupTag,
+                    CustomHealthChecksDefaultOptions.LivenessTag,
+                    CustomHealthChecksDefaultOptions.ReadinessTag,
+                });
+
+            var connection =
+                configuration[$"{EventBusRabbitMQSettings.EventBusSettingsKey}:{nameof(EventBusRabbitMQSettings.Connection)}"];
+            hcBuilder
+                .AddRabbitMQ(connection, name: "rabbitmq-check",
+                    tags: new string[] {
+                        CustomHealthChecksDefaultOptions.StartupTag,
+                        CustomHealthChecksDefaultOptions.ReadinessTag,
+                    });
+
+            return services;
+        }
+    }
+
 }

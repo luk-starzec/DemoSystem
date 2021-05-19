@@ -1,14 +1,10 @@
 ﻿using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using System.Net.Sockets;
-using System.Text;
 
 namespace EventBusRabbitMQ
 {
@@ -16,6 +12,7 @@ namespace EventBusRabbitMQ
     {
         private readonly IConnectionFactory _connectionFactory;
         private readonly int _retryCount;
+
         IConnection _connection;
         bool _disposed;
 
@@ -59,10 +56,8 @@ namespace EventBusRabbitMQ
 
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
         }
 
@@ -72,7 +67,6 @@ namespace EventBusRabbitMQ
                 return;
 
             _disposed = true;
-
             try
             {
                 _connection.Dispose();

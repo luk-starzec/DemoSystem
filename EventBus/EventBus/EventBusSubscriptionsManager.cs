@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace EventBus
 {
@@ -57,17 +56,17 @@ namespace EventBus
 
         private void DoRemoveHandler(string eventName, SubscriptionInfo subsToRemove)
         {
-            if (subsToRemove != null)
+            if (subsToRemove == null)
+                return;
+
+            _handlers[eventName].Remove(subsToRemove);
+            if (!_handlers[eventName].Any())
             {
-                _handlers[eventName].Remove(subsToRemove);
-                if (!_handlers[eventName].Any())
-                {
-                    _handlers.Remove(eventName);
-                    var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-                    if (eventType != null)
-                        _eventTypes.Remove(eventType);
-                    RaiseOnEventRemoved(eventName);
-                }
+                _handlers.Remove(eventName);
+                var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
+                if (eventType != null)
+                    _eventTypes.Remove(eventType);
+                RaiseOnEventRemoved(eventName);
             }
         }
         private SubscriptionInfo FindSubscriptionToRemove<T, TH>()
@@ -87,7 +86,6 @@ namespace EventBus
             var handler = OnEventRemoved;
             handler?.Invoke(this, eventName);
         }
-
 
         public bool HasSubscriptionsForEvent<T>() where T : IntegrationEvent
         {

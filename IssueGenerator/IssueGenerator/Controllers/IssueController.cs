@@ -1,4 +1,5 @@
-﻿using IssueGenerator.IntegrationEvents;
+﻿using BasicIntegrationEventService;
+using IssueGenerator.IntegrationEvents;
 using IssueGenerator.IntegrationEvents.Events;
 using IssueGenerator.Models;
 using IssueGenerator.Services;

@@ -1,17 +1,13 @@
-﻿using Autofac;
-using EventBus;
-using Newtonsoft.Json.Linq;
+﻿using EventBus;
+using Microsoft.Extensions.DependencyInjection;
 using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using System;
-using System.Diagnostics.Tracing;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace EventBusRabbitMQ
@@ -21,18 +17,18 @@ namespace EventBusRabbitMQ
         const string BROKER_NAME = "demo_event_bus";
 
         private readonly IRabbitMQPersistentConnection _persistentConnection;
-        private readonly IEventBusSubscriptionsManager _subsManager;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEventBusSubscriptionsManager _subscriptionsManager;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly int _retryCount;
 
         private IModel _consumerChannel;
         private string _queueName;
 
-        public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, IEventBusSubscriptionsManager subsManager, IServiceProvider serviceProvider, string queueName = null, int retryCount = 3)
+        public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, IEventBusSubscriptionsManager subscriptionsManager, IServiceScopeFactory serviceScopeFactory, string queueName = null, int retryCount = 3)
         {
             _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
-            _subsManager = subsManager ?? new EventBusSubscriptionsManager();
-            _serviceProvider = serviceProvider;
+            _subscriptionsManager = subscriptionsManager ?? new EventBusSubscriptionsManager();
+            _serviceScopeFactory = serviceScopeFactory;
             _queueName = queueName;
             _retryCount = retryCount;
             _consumerChannel = CreateConsumerChannel();
@@ -62,11 +58,11 @@ namespace EventBusRabbitMQ
                 properties.DeliveryMode = 2; // persistent
 
                 channel.BasicPublish(
-                exchange: BROKER_NAME,
-                routingKey: eventName,
-                mandatory: true,
-                basicProperties: properties,
-                body: body);
+                    exchange: BROKER_NAME,
+                    routingKey: eventName,
+                    mandatory: true,
+                    basicProperties: properties,
+                    body: body);
             });
         }
 
@@ -74,10 +70,10 @@ namespace EventBusRabbitMQ
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            var eventName = _subsManager.GetEventKey<T>();
+            var eventName = _subscriptionsManager.GetEventKey<T>();
             DoInternalSubscription(eventName);
 
-            _subsManager.AddSubscription<T, TH>();
+            _subscriptionsManager.AddSubscription<T, TH>();
             StartBasicConsume();
         }
 
@@ -85,7 +81,7 @@ namespace EventBusRabbitMQ
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            _subsManager.RemoveSubscription<T, TH>();
+            _subscriptionsManager.RemoveSubscription<T, TH>();
         }
 
         public void Dispose()
@@ -93,21 +89,21 @@ namespace EventBusRabbitMQ
             if (_consumerChannel != null)
                 _consumerChannel.Dispose();
 
-            _subsManager.Clear();
+            _subscriptionsManager.Clear();
         }
 
 
         private void DoInternalSubscription(string eventName)
         {
-            var containsKey = _subsManager.HasSubscriptionsForEvent(eventName);
-            if (!containsKey)
-            {
-                if (!_persistentConnection.IsConnected)
-                    _persistentConnection.TryConnect();
+            var containsKey = _subscriptionsManager.HasSubscriptionsForEvent(eventName);
+            if (containsKey)
+                return;
 
-                using var channel = _persistentConnection.CreateModel();
-                channel.QueueBind(_queueName, BROKER_NAME, eventName);
-            }
+            if (!_persistentConnection.IsConnected)
+                _persistentConnection.TryConnect();
+
+            using var channel = _persistentConnection.CreateModel();
+            channel.QueueBind(_queueName, BROKER_NAME, eventName);
         }
 
         private void StartBasicConsume()
@@ -129,7 +125,7 @@ namespace EventBusRabbitMQ
             {
                 await ProcessEvent(eventName, message);
             }
-            catch (Exception)
+            catch (Exception ex)
             { }
 
             // should be handled with a Dead Letter Exchange (DLX). See: https://www.rabbitmq.com/dlx.html
@@ -138,21 +134,24 @@ namespace EventBusRabbitMQ
 
         private async Task ProcessEvent(string eventName, string message)
         {
-            if (!_subsManager.HasSubscriptionsForEvent(eventName))
+            if (!_subscriptionsManager.HasSubscriptionsForEvent(eventName))
                 return;
 
-            var subscriptions = _subsManager.GetHandlersForEvent(eventName);
-            foreach (var subscription in subscriptions)
+            using (var serviceScope = _serviceScopeFactory.CreateScope())
             {
-                var handler = _serviceProvider.GetService(subscription.HandlerType);
-                if (handler == null)
-                    continue;
-                var eventType = _subsManager.GetEventTypeByName(eventName);
-                var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+                var subscriptions = _subscriptionsManager.GetHandlersForEvent(eventName);
+                foreach (var subscription in subscriptions)
+                {
+                    var handler = serviceScope.ServiceProvider.GetService(subscription.HandlerType);
+                    if (handler == null)
+                        continue;
+                    var eventType = _subscriptionsManager.GetEventTypeByName(eventName);
+                    var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
-                await Task.Yield();
-                await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                    //await Task.Yield();
+                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                }
             }
         }
 

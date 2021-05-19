@@ -9,14 +9,14 @@ namespace IssueGenerator.IntegrationEvents.Events
 {
     public class IssueCreatedIntegrationEvent : IntegrationEvent
     {
-        public string Title { get; set; }
+        public IssueModel Issue { get; set; }
 
         public IssueCreatedIntegrationEvent()
         { }
 
         public IssueCreatedIntegrationEvent(IssueModel issue)
         {
-            Title = issue.Title;
+            Issue = issue;
         }
     }
 }

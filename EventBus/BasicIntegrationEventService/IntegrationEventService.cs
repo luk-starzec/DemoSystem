@@ -1,10 +1,7 @@
 ﻿using EventBus;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace IssueGenerator.IntegrationEvents
+namespace BasicIntegrationEventService
 {
     public class IntegrationEventService : IIntegrationEventService
     {
