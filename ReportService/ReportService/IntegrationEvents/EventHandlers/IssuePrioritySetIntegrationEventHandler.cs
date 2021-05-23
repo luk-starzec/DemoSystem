@@ -11,7 +11,7 @@ namespace ReportService.IntegrationEvents.EventHandlers
         public Task Handle(IssuePrioritySetIntegrationEvent @event)
         {
             var issue = @event.Issue;
-            Console.WriteLine($"Raport - app: {issue.App}, title: {issue.Title}, priority: {issue.Priority}");
+            Console.WriteLine($"Priority set - app: {issue.App}, title: {issue.Title}, priority: {issue.Priority}");
             return Task.CompletedTask;
         }
     }

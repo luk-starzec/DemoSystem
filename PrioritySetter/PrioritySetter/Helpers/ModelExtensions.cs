@@ -27,5 +27,24 @@ namespace PrioritySetter.Helpers
             };
         }
 
+
+        public static AppPriorityModel ToModel(this AppPriority entity)
+        {
+            return new AppPriorityModel
+            {
+                App = entity.App,
+                PriorityLevelId = (int)entity.PriorityLevel,
+            };
+        }
+
+        public static AppPriority ToEntity(this AppPriorityModel model)
+        {
+            return new AppPriority
+            {
+                App = model.App,
+                PriorityLevel = (EnumPriorityLevel)model.PriorityLevelId,
+            };
+        }
+
     }
 }

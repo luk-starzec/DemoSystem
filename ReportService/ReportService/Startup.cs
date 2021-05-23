@@ -36,7 +36,8 @@ namespace ReportService
             services.AddIntegrationEvents(new Type[]
             {
                 typeof(IssueCreatedIntegrationEventHandler),
-                typeof(IssuePrioritySetIntegrationEventHandler)
+                typeof(IssuePrioritySetIntegrationEventHandler),
+                typeof(IssueCompletedIntegrationEventHandler),
             });
 
             services.AddControllers();
@@ -73,6 +74,7 @@ namespace ReportService
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
             eventBus.Subscribe<IssueCreatedIntegrationEvent, IssueCreatedIntegrationEventHandler>();
             eventBus.Subscribe<IssuePrioritySetIntegrationEvent, IssuePrioritySetIntegrationEventHandler>();
+            eventBus.Subscribe<IssueCompletedIntegrationEvent, IssueCompletedIntegrationEventHandler>();
         }
 
     }

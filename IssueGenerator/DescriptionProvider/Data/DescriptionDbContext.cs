@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DescriptionProvider.Data
 {
@@ -12,35 +8,34 @@ namespace DescriptionProvider.Data
             : base(options)
         { }
 
-        public DbSet<TextSet> TextSets { get; set; }
+        public DbSet<TextSource> TextSources { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TextSet>().ToTable("TextSets");
-            modelBuilder.Entity<TextSet>(entity =>
+            modelBuilder.Entity<TextSource>(entity =>
             {
+                entity.ToTable("TextSources");
                 entity.HasKey(r => r.Id);
                 entity.Property(r => r.Id).ValueGeneratedOnAdd();
                 entity.HasIndex(r => r.Name).IsUnique();
             });
 
-            modelBuilder.Entity<TextSet>().HasData(GetDefaultTextSets());
-
+            modelBuilder.Entity<TextSource>().HasData(GetDefaultTextSources());
 
             base.OnModelCreating(modelBuilder);
         }
 
-        private TextSet[] GetDefaultTextSets()
+        private TextSource[] GetDefaultTextSources()
         {
-            return new TextSet[]
+            return new TextSource[]
             {
-                new TextSet
+                new TextSource
                 {
                     Id = 1,
                     Name = "Lorem ipsum",
                     Text= InitialData.LoremIpsumText,
                 },
-                new TextSet
+                new TextSource
                 {
                     Id = 2,
                     Name = "Li Europan lingues",
@@ -48,6 +43,5 @@ namespace DescriptionProvider.Data
                 }
             };
         }
-
     }
 }

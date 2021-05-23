@@ -23,9 +23,13 @@ namespace PrioritySetter.Services
 
         public async Task SetIssuePriority(IssueModel issue)
         {
-            var priority = await GetErrorPriority(issue.Title);
-            if (priority is null)
-                priority = await GetDefaultPriorityAsync();
+            var defaultPriority = await GetDefaultPriorityAsync();
+            var errorPriority = (await GetErrorPriority(issue.Title)) ?? defaultPriority;
+            var appPriority = (await GetAppPriority(issue.App)) ?? defaultPriority;
+
+            var priority = errorPriority.PriorityLevel == defaultPriority.PriorityLevel
+                ? appPriority
+                : errorPriority;
 
             issue.Priority = priority.Name;
             issue.PriorityDescription = priority.Description;
@@ -38,6 +42,14 @@ namespace PrioritySetter.Services
         {
             return await dbContext.ErrorPriority
                  .Where(r => r.Error.ToLower() == error.ToLower())
+                 .Select(r => r.PriorityRelation)
+                 .SingleOrDefaultAsync();
+        }
+
+        private async Task<Priority> GetAppPriority(string app)
+        {
+            return await dbContext.AppPriority
+                 .Where(r => r.App.ToLower() == app.ToLower())
                  .Select(r => r.PriorityRelation)
                  .SingleOrDefaultAsync();
         }

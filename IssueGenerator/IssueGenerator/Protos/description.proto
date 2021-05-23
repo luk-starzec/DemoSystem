@@ -8,37 +8,41 @@ package description;
 
 service Description{
 	rpc GetText (TextRequest) returns (TextReply);
-	rpc GetTextSets (google.protobuf.Empty) returns (TextSetsReply);
-	rpc GetTextSetsStream (google.protobuf.Empty) returns (stream TextSetReply);
-	rpc AddTextSet (AddTextSetRequest) returns (TextSetReply);
-	rpc DeleteTextSet (DeleteTextSetRequest) returns (google.protobuf.Empty);
+	rpc GetTextSources (google.protobuf.Empty) returns (TextSourcesReply);
+	rpc GetTextSourcesStream (google.protobuf.Empty) returns (stream TextSourceReply);
+	rpc AddTextSource (AddTextSourceRequest) returns (TextSourceReply);
+	rpc DeleteTextSource (DeleteTextSourceRequest) returns (DeleteTextSourceResponse);
 }
 
 message TextRequest{
 	google.protobuf.Int32Value wordsLimit = 1;
-	google.protobuf.Int32Value textSetId = 2;
+	bool randomWordsCount = 2;
+	google.protobuf.Int32Value textSourceId = 3;
 }
 
 message TextReply{
 	string text = 1;
 }
 
-message AddTextSetRequest{
+message AddTextSourceRequest{
 	string name = 1;
 	string text = 2;
 }
 
-message DeleteTextSetRequest{
-	int32 textSetId = 1;
+message DeleteTextSourceRequest{
+	int32 textSourceId = 1;
 }
 
-message TextSetReply{
+message DeleteTextSourceResponse{
+	string error = 1;
+}
+
+message TextSourceReply{
 	int32 id = 1;
 	string name = 2;
 	string text =  3;
 }
 
-message TextSetsReply{
-	repeated TextSetReply textSets = 1;
+message TextSourcesReply{
+	repeated TextSourceReply textSources = 1;
 }
-

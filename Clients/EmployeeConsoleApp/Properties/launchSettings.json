@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EmployeeConsoleApp": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

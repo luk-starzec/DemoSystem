@@ -8,7 +8,7 @@ using PrioritySetter.Data;
 namespace PrioritySetter.Migrations
 {
     [DbContext(typeof(PrioritySetterContext))]
-    [Migration("20210519192403_init")]
+    [Migration("20210522183956_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -16,6 +16,29 @@ namespace PrioritySetter.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
+
+            modelBuilder.Entity("PrioritySetter.Data.AppPriority", b =>
+                {
+                    b.Property<string>("App")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("PriorityLevelId");
+
+                    b.HasKey("App");
+
+                    b.HasIndex("PriorityLevel");
+
+                    b.ToTable("AppPriorities");
+
+                    b.HasData(
+                        new
+                        {
+                            App = "Glob",
+                            PriorityLevel = 1
+                        });
+                });
 
             modelBuilder.Entity("PrioritySetter.Data.ErrorPriority", b =>
                 {
@@ -31,6 +54,38 @@ namespace PrioritySetter.Migrations
                     b.HasIndex("PriorityLevel");
 
                     b.ToTable("ErrorPriorities");
+
+                    b.HasData(
+                        new
+                        {
+                            Error = "NullReferenceException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Error = "ArgumentNullException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Error = "OutOfMemoryException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Error = "MissingFieldException",
+                            PriorityLevel = 1
+                        },
+                        new
+                        {
+                            Error = "MissingMemberException",
+                            PriorityLevel = 1
+                        },
+                        new
+                        {
+                            Error = "MissingMethodException",
+                            PriorityLevel = 1
+                        });
                 });
 
             modelBuilder.Entity("PrioritySetter.Data.Priority", b =>
@@ -68,6 +123,17 @@ namespace PrioritySetter.Migrations
                             Description = "Maybe later",
                             Name = "Low"
                         });
+                });
+
+            modelBuilder.Entity("PrioritySetter.Data.AppPriority", b =>
+                {
+                    b.HasOne("PrioritySetter.Data.Priority", "PriorityRelation")
+                        .WithMany()
+                        .HasForeignKey("PriorityLevel")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PriorityRelation");
                 });
 
             modelBuilder.Entity("PrioritySetter.Data.ErrorPriority", b =>

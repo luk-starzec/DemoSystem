@@ -12,7 +12,7 @@ namespace ReportService.IntegrationEvents.EventHandlers
         public Task Handle(IssueCreatedIntegrationEvent @event)
         {
             var issue = @event.Issue;
-            Console.WriteLine($"Raport - app: {issue.App}, title: {issue.Title}, desc: {issue.Description}");
+            Console.WriteLine($"Created - app: {issue.App}, title: {issue.Title}, desc: {issue.Description}");
             return Task.CompletedTask;
         }
     }

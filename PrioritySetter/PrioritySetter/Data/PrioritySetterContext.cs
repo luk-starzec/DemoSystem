@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
+using PrioritySetter.Data;
 
 namespace PrioritySetter.Data
 {
@@ -14,6 +15,7 @@ namespace PrioritySetter.Data
         { }
 
         public DbSet<ErrorPriority> ErrorPriority { get; set; }
+        public DbSet<AppPriority> AppPriority { get; set; }
         public DbSet<Priority> Priority { get; set; }
 
 
@@ -27,6 +29,14 @@ namespace PrioritySetter.Data
                 entity.HasOne(r => r.PriorityRelation).WithMany().HasForeignKey(r => r.PriorityLevel);
             });
 
+            modelBuilder.Entity<AppPriority>(entity =>
+            {
+                entity.ToTable("AppPriorities");
+                entity.HasKey(r => r.App);
+                entity.Property(r => r.PriorityLevel).HasConversion<int>().HasColumnName("PriorityLevelId");
+                entity.HasOne(r => r.PriorityRelation).WithMany().HasForeignKey(r => r.PriorityLevel);
+            });
+
             modelBuilder.Entity<Priority>(entity =>
             {
                 entity.ToTable("DicPriorityLevels");
@@ -34,36 +44,13 @@ namespace PrioritySetter.Data
                 entity.Property(r => r.PriorityLevel).HasConversion<int>().HasColumnName("PriorityLevelId");
             });
 
-            modelBuilder.Entity<Priority>().HasData(GetDefaultPriorities());
+            modelBuilder.Entity<Priority>().HasData(InitialData.GetPriorities());
+            modelBuilder.Entity<ErrorPriority>().HasData(InitialData.GetErrorPriorities());
+            modelBuilder.Entity<AppPriority>().HasData(InitialData.GetAppPriorities());
 
             base.OnModelCreating(modelBuilder);
         }
 
-
-        private Priority[] GetDefaultPriorities()
-        {
-            return new Priority[]
-            {
-                new Priority
-                {
-                    PriorityLevel = EnumPriorityLevel.Normal,
-                    Name = EnumPriorityLevel.Normal.ToString(),
-                    Description = "Do it",
-                },
-                new Priority
-                {
-                    PriorityLevel = EnumPriorityLevel.High,
-                    Name = EnumPriorityLevel.High.ToString(),
-                    Description = "Do it now!",
-                },
-                new Priority
-                {
-                    PriorityLevel = EnumPriorityLevel.Low,
-                    Name = EnumPriorityLevel.Low.ToString(),
-                    Description = "Maybe later",
-                },
-            };
-        }
 
     }
 }

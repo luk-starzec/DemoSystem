@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using System.IO;
 using System.Net;
 
@@ -12,12 +11,13 @@ namespace DescriptionProvider
     {
         public static void Main(string[] args)
         {
-            var configuration = GetConfiguration();
-            CreateHostBuilder(configuration, args).Build().Run();
+            CreateHostBuilder( args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args)
+        public static IHostBuilder CreateHostBuilder( string[] args)
         {
+            var configuration = GetConfiguration();
+
             return Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {

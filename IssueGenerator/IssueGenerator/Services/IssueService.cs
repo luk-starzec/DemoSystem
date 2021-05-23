@@ -23,10 +23,10 @@ namespace IssueGenerator.Services
         public async Task<IssueModel[]> GenerateIssues(GenerationOptions options)
         {
             var result = new List<IssueModel>();
-            for (int i = 0; i < options.Quantity; i++)
+            for (int i = 0; i < options.IssuesCount; i++)
             {
                 var header = await headerService.GetHeader();
-                var description = await descriptionService.GetDescription(options.TextSetId, options.WordsLimit);
+                var description = await descriptionService.GetDescriptionAsync(options.TextSourceId, options.WordsLimit, options.RandomWordsCount);
                 var sender = await senderService.GetSender();
 
                 var issue = new IssueModel

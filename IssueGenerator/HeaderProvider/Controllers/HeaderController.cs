@@ -22,6 +22,7 @@ namespace HeaderProvider.Controllers
             this.service = service;
             this.logger = logger;
         }
+
         [HttpGet]
         public ActionResult<HeaderModel> Get()
         {

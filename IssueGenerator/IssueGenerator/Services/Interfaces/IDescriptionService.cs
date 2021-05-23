@@ -4,6 +4,7 @@ namespace IssueGenerator.Services.Interfaces
 {
     public interface IDescriptionService
     {
-        Task<string> GetDescription(int? textSetId, int? wordsLimit);
+        Task<string> GetDescriptionAsync(int? textSetId, int? wordsLimit, bool randomWordsCount);
+        Task Test();
     }
 }

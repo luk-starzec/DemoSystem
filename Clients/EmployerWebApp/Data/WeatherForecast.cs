@@ -1,6 +1,6 @@
 using System;
 
-namespace ReportService
+namespace EmployerWebApp.Data
 {
     public class WeatherForecast
     {

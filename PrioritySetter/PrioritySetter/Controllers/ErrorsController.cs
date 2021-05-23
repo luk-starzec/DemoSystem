@@ -81,10 +81,10 @@ namespace PrioritySetter.Controllers
                 throw;
             }
 
-            return CreatedAtAction("GetErrorPriority", new { id = errorPriority.Error }, errorPriority);
+            return CreatedAtAction(nameof(GetErrorPriority), new { error = errorPriority.Error }, errorPriority);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{error}")]
         public async Task<IActionResult> DeleteErrorPriority(string error)
         {
             var errorPriority = await _context.ErrorPriority.FindAsync(error);
