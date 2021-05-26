@@ -1,0 +1,32 @@
+﻿<tr>
+    <th>App</th>
+
+    <th>Title</th>
+
+    <th>Priority</th>
+
+    <th>Employee</th>
+
+    <th>Created</th>
+
+    <th class="text-right">
+        <button class="btn btn-sm btn-outline-light" @onclick="DetailsButtonClick" title="@textDetailsButton all details">
+            @textDetailsButton
+        </button>
+    </th>
+
+</tr>
+
+@code {
+    [Parameter]
+    public bool IsAnyDetailsVisible { get; set; }
+    [Parameter]
+    public EventCallback<bool> OnShowDetails { get; set; }
+
+    string textDetailsButton => IsAnyDetailsVisible ? "collapse" : "expand";
+
+    async Task DetailsButtonClick()
+    {
+        await OnShowDetails.InvokeAsync(!IsAnyDetailsVisible);
+    }
+}

@@ -1,0 +1,21 @@
+﻿
+.collapsed {
+    visibility: collapse;
+}
+
+.logs-header {
+    border-radius: .25rem .25rem 0 0;
+    border-bottom: none;
+}
+
+::deep .selected-row {
+    background-color: #F9FCFF;
+}
+
+.input-group-text {
+    min-width: 7rem;
+}
+
+ul {
+    list-style: none;
+}

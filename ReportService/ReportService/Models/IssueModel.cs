@@ -14,6 +14,7 @@ namespace ReportService.Models
         public string Description { get; set; }
         public string Sender { get; set; }
         public string Priority { get; set; }
-        public string AssignedUser  { get; set; }
+        public string Employee { get; set; }
+        public List<EventLogModel> Logs { get; set; } = new List<EventLogModel>();
     }
 }

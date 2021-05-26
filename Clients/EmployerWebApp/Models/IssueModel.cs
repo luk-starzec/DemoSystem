@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
+using System.Linq;
 
-namespace EmployeeConsoleApp
+namespace EmployerWebApp.Models
 {
     public class IssueModel
     {
@@ -12,5 +14,10 @@ namespace EmployeeConsoleApp
         public string Sender { get; set; }
         public string Priority { get; set; }
         public string Employee { get; set; }
+        public EventLogModel[] Logs { get; set; }
+
+        public bool DetailsVisible { get; set; }
+
+        public EventLogModel[] SortedLogs => Logs.OrderByDescending(r => r.Date).ToArray();
     }
 }

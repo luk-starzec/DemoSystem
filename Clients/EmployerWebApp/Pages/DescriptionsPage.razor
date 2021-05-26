@@ -1,0 +1,42 @@
+﻿@page "/descriptions"
+@inject IDescriptionService descriptionService
+
+<PageHeader Title="Description sources" />
+
+<main class="content p-5">
+
+    @if (descriptionSources is null)
+    {
+        <div class="alert alert-primary">
+            Loading data...
+        </div>
+    }
+    else
+    {
+        @foreach (var descriptionSource in descriptionSources)
+        {
+            <DescriptionSourceItem DescriptionSource="@descriptionSource" OnDescriptionSourceDeleted="DescriptionSourceDeleted" />
+        }
+        <DescriptionSourceNewItem OnDescriptionSourceAdded="DescriptionSourceAdded" />
+    }
+
+</main>
+
+@code {
+    private List<DescriptionSource> descriptionSources;
+
+    protected override async Task OnInitializedAsync()
+    {
+        descriptionSources = await descriptionService.GetDescriptionSourcesAsync();
+    }
+
+    private void DescriptionSourceAdded(DescriptionSource descriptionSource)
+    {
+        descriptionSources.Add(descriptionSource);
+    }
+
+    private async Task DescriptionSourceDeleted()
+    {
+        descriptionSources = await descriptionService.GetDescriptionSourcesAsync();
+    }
+}

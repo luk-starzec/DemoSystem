@@ -11,6 +11,21 @@ namespace DescriptionProvider.Services
 {
     public partial class DescriptionService
     {
+        public override async Task<TextSourceNamesReply> GetTextSourceNames(Empty request, ServerCallContext context)
+        {
+            var textSourceNames = await dbContext.TextSources
+                .Select(r => new TextSourceNameReply
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                }).ToArrayAsync();
+
+            var reply = new TextSourceNamesReply();
+            reply.TextSourceNames.AddRange(textSourceNames);
+
+            return reply;
+        }
+
         public override async Task<TextSourcesReply> GetTextSources(Empty request, ServerCallContext context)
         {
             var textSources = await dbContext.TextSources

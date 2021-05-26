@@ -32,8 +32,9 @@ namespace EmployerWebApp
 
             services.AddHttpClient<IssueService>();
             services.AddTransient<IIssueService, IssueService>();
-
             services.AddTransient<IDescriptionService, DescriptionService>();
+            services.AddHttpClient<IReportService>();
+            services.AddTransient<IReportService, ReportService>();
 
             services.AddSingleton<WeatherForecastService>();
         }

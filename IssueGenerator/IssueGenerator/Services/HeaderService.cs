@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -22,10 +23,12 @@ namespace IssueGenerator.Services
 
         public async Task<HeaderModel> GetHeader()
         {
-            var result = await client.GetStringAsync("/api/header");
-            var model = JsonSerializer.Deserialize<HeaderModel>(result,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            return model;
+            return await client.GetFromJsonAsync<HeaderModel>("/api/header");
+
+            //var result = await client.GetStringAsync("/api/header");
+            //var model = JsonSerializer.Deserialize<HeaderModel>(result,
+            //    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            //return model;
         }
     }
 }

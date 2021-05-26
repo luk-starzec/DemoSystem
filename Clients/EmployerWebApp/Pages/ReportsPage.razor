@@ -1,0 +1,103 @@
+﻿@page "/reports"
+
+@using System.Timers
+@implements IDisposable
+@inject IReportService reportService
+
+<PageHeader Title="Reports" />
+
+<main class="content p-3">
+
+    @if (issues is null)
+    {
+        <div class="alert alert-primary">
+            Loading data...
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-sm @cssPollingButton" @onclick="PollingButtonClick">
+                @textPollingButton
+            </button>
+        </div>
+
+        @if (issues.Any())
+        {
+            <table class="table">
+
+                <thead class="bg-secondary text-white">
+
+                    <ReportHeaderRow IsAnyDetailsVisible="@isAnyDetailsVisible" OnShowDetails="ShowAllDetails" />
+
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < issues.Count; i++)
+                    {
+                        int index = i;
+
+                        <ReportRow @bind-Issue="issues[index]" />
+
+                        <ReportDetailsRow Issue="@issues[index]" />
+                    }
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-light">
+                There is nothing to show yet
+            </div>
+        }
+    }
+
+</main>
+
+@code {
+    private List<IssueModel> issues;
+
+    private Timer timer;
+
+    bool isPolling = true;
+    string textPollingButton => isPolling ? "Stop polling" : "Start polling";
+    string cssPollingButton => isPolling ? "btn-primary" : "btn-secondary";
+
+    bool isAnyDetailsVisible => issues?.Where(r => r.DetailsVisible).Any() ?? false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadIssues();
+
+        timer = new()
+        {
+            Interval = 1_000,
+            AutoReset = true,
+            Enabled = isPolling,
+        };
+        timer.Elapsed += async (_, _) => await InvokeAsync(LoadIssues);
+    }
+
+    public void Dispose() => timer?.Dispose();
+
+    async Task LoadIssues()
+    {
+        var newData = await reportService.GetLastIssuesAsync();
+        newData.ForEach(r => r.DetailsVisible = issues?.SingleOrDefault(rr => rr.Id == r.Id)?.DetailsVisible ?? false);
+        issues = newData;
+        StateHasChanged();
+    }
+
+    void PollingButtonClick()
+    {
+        isPolling = !isPolling;
+        timer.Enabled = isPolling;
+    }
+
+    void ShowAllDetails(bool detailsVisible)
+    {
+        issues?.ForEach(r => r.DetailsVisible = detailsVisible);
+        StateHasChanged();
+    }
+}

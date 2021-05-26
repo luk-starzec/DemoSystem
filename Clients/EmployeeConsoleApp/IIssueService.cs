@@ -4,6 +4,6 @@ namespace EmployeeConsoleApp
 {
     public interface IIssueService
     {
-        Task CompleteIssue(IssueModel issue);
+        Task CompleteIssueAsync(IssueModel issue);
     }
 }

@@ -1,0 +1,71 @@
+﻿@inject IDescriptionService descriptionService
+
+<details class="mb-2 bg-light" open>
+
+    <summary class="d-flex bg-secondary p-2 text-white">
+        <span class="oi oi-align-left"></span>
+        <span class="col">@DescriptionSource.Name [id @DescriptionSource.Id]</span>
+        <span class="col text-right">(@DescriptionSource.WordsCount words)</span>
+    </summary>
+
+    <div class="p-3">
+
+        <p class="col mb-3">
+            @DescriptionSource.Text
+        </p>
+
+        <div class="d-flex justify-content-end mr-2 align-items-center">
+            @if (confirmVisible)
+            {
+                <span class="text-primary font-weight-bold">
+                    Are you sure?
+                </span>
+                <button class="btn bg-white mx-3" @onclick="HandleCancelClick" disabled="@disableButton">
+                    <span>Cancel</span>
+                </button>
+                <button class="btn btn-danger" @onclick="HandleConfirmClick" disabled="@disableButton">
+                    <span class="oi oi-check mr-2"></span>
+                    <span>Yes</span>
+                </button>
+
+            }
+            else
+            {
+                <button class="btn bg-white" @onclick="HandleDeleteClick" disabled="@disableButton">
+                    <span class="oi oi-trash mr-2 text-secondary"></span>
+                    <span>@buttonText</span>
+                </button>
+            }
+        </div>
+
+    </div>
+
+</details>
+
+@code {
+    [Parameter]
+    public DescriptionSource DescriptionSource { get; set; }
+    [Parameter]
+    public EventCallback OnDescriptionSourceDeleted { get; set; }
+
+    bool disableButton = false;
+    string buttonText => disableButton ? "Wait..." : "Delete";
+    bool confirmVisible = false;
+
+    public void HandleDeleteClick() => confirmVisible = true;
+
+    public void HandleCancelClick() => confirmVisible = false;
+
+
+    public async Task HandleConfirmClick()
+    {
+        disableButton = true;
+        confirmVisible = false;
+
+        await descriptionService.DeleteDescriptionSourceAsync(DescriptionSource.Id);
+        await OnDescriptionSourceDeleted.InvokeAsync();
+
+        disableButton = false;
+    }
+
+}

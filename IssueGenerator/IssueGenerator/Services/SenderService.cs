@@ -2,10 +2,8 @@
 using IssueGenerator.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace IssueGenerator.Services
@@ -22,9 +20,10 @@ namespace IssueGenerator.Services
 
         public async Task<string> GetSender()
         {
-            var result = await client.GetStringAsync("/api/sender");
-            var model = JsonSerializer.Deserialize<SenderModel>(result,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            //var result = await client.GetStringAsync("/api/sender");
+            //var model = JsonSerializer.Deserialize<SenderModel>(result,
+            //    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var model = await client.GetFromJsonAsync<SenderModel>("/api/sender");
             return $"{model.Name}{Environment.NewLine}{model.JobTitle}";
         }
     }

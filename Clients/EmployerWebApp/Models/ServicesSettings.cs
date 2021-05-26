@@ -9,5 +9,7 @@ namespace EmployerWebApp.Models
     {
         public const string ServicesSettingsKey = "ServicesSettings";
         public string IssueGeneratorUrl { get; set; }
+        public string DescriptionProviderUrl { get; set; }
+        public string ReportServiceUrl { get; set; }
     }
 }

@@ -2,7 +2,6 @@
 using IssueGenerator.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace IssueGenerator.Services
@@ -32,7 +31,7 @@ namespace IssueGenerator.Services
                 var issue = new IssueModel
                 {
                     Id = Guid.NewGuid(),
-                    Created = DateTime.UtcNow,
+                    Created = DateTimeOffset.Now,
                     App = header.App,
                     Title = header.Title,
                     Description = description,

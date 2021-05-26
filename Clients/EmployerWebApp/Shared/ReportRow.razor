@@ -1,0 +1,54 @@
+﻿<tr class="@cssRow">
+
+    <td>
+        @Issue.App
+    </td>
+
+    <td>
+        @Issue.Title
+    </td>
+
+    <td>
+        <div class="text-center rounded @cssPriority">
+            @Issue.Priority
+        </div>
+    </td>
+
+    <td>@Issue.Employee</td>
+
+    <td class="font-weight-normal">
+        @Issue.Created.ToString("yyyy-MM-dd HH:mm")
+    </td>
+
+    <td class="text-right">
+        <button class="btn btn-light btn-sm" @onclick="DetailsButtonClick">
+            @textDetailsButton
+        </button>
+    </td>
+
+</tr>
+
+@code {
+    [Parameter]
+    public IssueModel Issue { get; set; }
+    [Parameter]
+    public EventCallback<IssueModel> IssueChanged { get; set; }
+
+    string textDetailsButton => Issue.DetailsVisible ? "less" : "more";
+
+    string cssRow => Issue.DetailsVisible ? "font-weight-bold selected-row" : "";
+
+    string cssPriority =>
+       Issue.Priority switch
+       {
+           "High" => "alert-danger",
+           "Normal" => "alert-primary",
+           _ => "alert-secondary"
+       };
+
+    async Task DetailsButtonClick()
+    {
+        Issue.DetailsVisible = !Issue.DetailsVisible;
+        await IssueChanged.InvokeAsync(Issue);
+    }
+}

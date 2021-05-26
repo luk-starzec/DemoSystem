@@ -1,0 +1,17 @@
+﻿
+.collapsed {
+    visibility: collapse;
+}
+
+.logs-header {
+    border-radius: .25rem .25rem 0 0;
+    border-bottom: none;
+}
+
+.input-group-text {
+    min-width: 7rem;
+}
+
+ul {
+    list-style: none;
+}

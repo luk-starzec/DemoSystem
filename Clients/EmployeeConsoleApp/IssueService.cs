@@ -25,18 +25,27 @@ namespace EmployeeConsoleApp
             this.logger = logger;
         }
 
-        public async Task CompleteIssue(IssueModel issue)
+        public async Task CompleteIssueAsync(IssueModel issue)
         {
+            AssignEmployee(issue);
+
+            logger.LogInformation("Employee assigned");
+
             int processingTime = GetProcessingTime(issue);
 
             logger.LogInformation("Started: {title} in {app}. Processing time: {time}s", issue.Title, issue.App, processingTime / 1000);
-            await DoWork(issue, processingTime);
+
+            var startedEvent = new IssueStartedIntegrationEvent(issue);
+            integrationEventService.PublishThroughEventBus(startedEvent);
+
+            await DoWorkAsync(processingTime);
+
             logger.LogInformation($"Issue completed");
 
             var completedEvent = new IssueCompletedIntegrationEvent(issue);
             integrationEventService.PublishThroughEventBus(completedEvent);
 
-            logger.LogInformation($"Event sent");
+            logger.LogInformation($"Work done");
         }
 
         private int GetProcessingTime(IssueModel issue)
@@ -50,10 +59,14 @@ namespace EmployeeConsoleApp
             return text.Split(" ", StringSplitOptions.RemoveEmptyEntries).Length;
         }
 
-        private async Task DoWork(IssueModel issue, int processingTime)
+        private void AssignEmployee(IssueModel issue)
+        {
+            issue.Employee = userName;
+        }
+
+        private async Task DoWorkAsync(int processingTime)
         {
             await Task.Delay(processingTime);
-            issue.AssignedUser = userName;
         }
     }
 }

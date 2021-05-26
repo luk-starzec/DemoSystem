@@ -1,0 +1,52 @@
+﻿@inject IDescriptionService descriptionService;
+
+<details class="mt-4 bg-light" open>
+
+    <summary class="d-flex btn-primary text-white p-2 align-items-center">
+        <span class="oi oi-plus mr-2 align-middle"></span>
+        <span class="col">Add new</span>
+    </summary>
+
+    <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit" class="p-3">
+
+        <DataAnnotationsValidator />
+
+        <InputText @bind-Value="model.Name" placeholder="name" class="col form-control mb-2" />
+
+        <InputTextArea @bind-Value="model.Text" placeholder="text" class="col form-control mb-3" />
+
+        <div class="col text-center">
+            <ValidationSummary />
+        </div>
+
+        <div class="d-flex justify-content-end mr-2">
+            <button type="submit" class="btn btn-primary" disabled="@disableButton">
+                <span class="oi oi-plus mr-2"></span>
+                <span>@buttonText</span>
+            </button>
+        </div>
+
+    </EditForm>
+
+</details>
+
+@code {
+    [Parameter]
+    public EventCallback<DescriptionSource> OnDescriptionSourceAdded { get; set; }
+
+    private DescriptionSource model = new();
+
+    bool disableButton = false;
+    string buttonText => disableButton ? "Wait..." : "Add";
+
+    private async Task HandleValidSubmit()
+    {
+        disableButton = true;
+
+        var added = await descriptionService.AddDescriptionSourceAsync(model);
+        model = new();
+        await OnDescriptionSourceAdded.InvokeAsync(added);
+
+        disableButton = false;
+    }
+}

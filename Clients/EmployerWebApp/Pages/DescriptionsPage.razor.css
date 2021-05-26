@@ -1,0 +1,7 @@
+﻿::deep button {
+    min-width: 10rem;
+}
+
+::deep ul {
+    list-style: none
+}

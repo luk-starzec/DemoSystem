@@ -1,0 +1,58 @@
+﻿<tr class="@cssRow">
+    <td colspan="6" class="border-top-0 pb-4">
+
+        <div class="row">
+
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text justify-content-center">Sender</span>
+                    </div>
+                    <textarea class="form-control bg-white" readonly>
+                        @Issue.Sender
+                    </textarea>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text justify-content-center">Description</span>
+                    </div>
+                    <textarea class="form-control bg-white" readonly>
+                        @Issue.Description
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="col-4">
+
+                <div class="input-group-text logs-header">
+                    Logs
+                </div>
+
+                <ul class="border rounded-bottom bg-white">
+                    @foreach (var log in Issue.SortedLogs)
+                    {
+                        <li class="row" @key="log">
+                            <div class="col">
+                                @log.Date.ToString("yyyy-MM-dd HH:mm:ss")
+                            </div>
+                            <div class="col">
+                                @log.Description
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public IssueModel Issue { get; set; }
+
+    private string cssRow => Issue.DetailsVisible ? "selected-row" : "collapsed";
+
+}

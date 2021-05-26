@@ -3,8 +3,8 @@
 }
 
 .top-row {
-    height: 6rem;
     background-color: rgba(0,0,0,0.4);
+    border: none;
 }
 
 .navbar-brand {

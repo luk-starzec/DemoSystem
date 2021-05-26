@@ -22,7 +22,7 @@ namespace EmployeeConsoleApp.IntegrationEvents.EventHandlers
 
             logger.LogInformation("Received issue: {title} in {app} [{priority}]", issue.Title, issue.App, issue.Priority);
 
-            await issueService.CompleteIssue(issue);
+            await issueService.CompleteIssueAsync(issue);
         }
     }
 }
