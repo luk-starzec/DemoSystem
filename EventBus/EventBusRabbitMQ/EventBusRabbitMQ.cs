@@ -32,6 +32,8 @@ namespace EventBusRabbitMQ
             _queueName = queueName;
             _retryCount = retryCount;
             _consumerChannel = CreateConsumerChannel();
+
+            _subscriptionsManager.OnEventRemoved += SubscriptionsManager_OnEventRemoved;
         }
 
         public void Publish(IntegrationEvent @event)
@@ -152,6 +154,21 @@ namespace EventBusRabbitMQ
                     //await Task.Yield();
                     await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
                 }
+            }
+        }
+
+        private void SubscriptionsManager_OnEventRemoved(object sender, string eventName)
+        {
+            if (!_persistentConnection.IsConnected)
+                _persistentConnection.TryConnect();
+
+            using var channel = _persistentConnection.CreateModel();
+            channel.QueueUnbind(_queueName, BROKER_NAME, eventName);
+
+            if (_subscriptionsManager.IsEmpty)
+            {
+                _queueName = string.Empty;
+                _consumerChannel.Close();
             }
         }
 

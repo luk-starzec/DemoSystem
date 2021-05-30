@@ -1,0 +1,163 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:helpers="clr-namespace:EmployeeWpfApp.Helpers">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <helpers:VisbilityToBooleanConverter x:Key="visbilityToBooleanConverter"/>
+            <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+
+    <SolidColorBrush x:Key="colorDark">#3A474D</SolidColorBrush>
+    <SolidColorBrush x:Key="colorMedium">#DFE7EB</SolidColorBrush>
+    <SolidColorBrush x:Key="colorLight">#F7F9FA</SolidColorBrush>
+
+    <Style x:Key="styleGrid" TargetType="{x:Type Grid}">
+        <Setter Property="Margin" Value="20 10"/>
+    </Style>
+
+    <Style x:Key="styleTitleLabel" TargetType="{x:Type Label}">
+        <Setter Property="Background" Value="{StaticResource colorDark}"/>
+        <Setter Property="Foreground" Value="{StaticResource colorMedium}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource colorMedium}"/>
+        <Setter Property="BorderThickness" Value="1 1 1 0"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Padding" Value="10 5"/>
+    </Style>
+
+    <Style x:Key="{x:Type DataGridColumnHeadersPresenter}" TargetType="{x:Type DataGridColumnHeadersPresenter}">
+        <Setter Property="Grid.ColumnSpan" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridColumnHeadersPresenter}">
+                    <Grid>
+                        <DataGridColumnHeader IsHitTestVisible="False" Name="PART_FillerColumnHeader"/>
+                        <ItemsPresenter/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="styleDataGrid" TargetType="{x:Type DataGrid}">
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="RowDetailsVisibilityMode" Value="Collapsed"/>
+        <Setter Property="MinRowHeight" Value="30"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderBrush" Value="{StaticResource colorMedium}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource colorMedium}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource colorMedium}"/>
+        <Setter Property="Background" Value="White"/>
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#E6ECEF"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#347299"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#F7F9FA"/>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="styleColumnHeader" TargetType="{x:Type DataGridColumnHeader}">
+        <Setter Property="Background" Value="{StaticResource colorDark}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="Padding" Value="5 3"/>
+    </Style>
+
+    <Style x:Key="styleCell" TargetType="{x:Type DataGridCell}">
+        <Setter Property="Padding" Value="5 3"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <ContentPresenter VerticalAlignment="Center" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="styleCellCenter" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource styleCell}">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="10 5"/>
+    </Style>
+
+    <Style x:Key="styleCellRight" TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource styleCell}">
+        <Setter Property="HorizontalContentAlignment" Value="Right"/>
+    </Style>
+
+    <Style x:Key="styleDetailsStackPanel" TargetType="{x:Type StackPanel}">
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="Margin" Value="10 5 10 10"/>
+    </Style>
+
+    <Style x:Key="styleDescriptionTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="MinLines" Value="3"/>
+        <Setter Property="BorderBrush" Value="{StaticResource colorLight}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="0 5 0 0"/>
+    </Style>
+
+    <Style x:Key="styleCompleteButton" TargetType="{x:Type Button}">
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="0 10 0 0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="MintCream"/>
+        <Setter Property="BorderBrush" Value="{StaticResource colorMedium}"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Orientation" Value="Horizontal"/>
+            </Style>
+            <Style TargetType="{x:Type Path}">
+                <Setter Property="Fill" Value="#28A745"/>
+                <Setter Property="Margin" Value="5 0"/>
+            </Style>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5 0"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="styleExpandDetailsToggleButton" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#88989B"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Content" Value="⮝"/>
+                <Setter Property="ToolTip" Value="show less"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="False">
+                <Setter Property="Content" Value="⮟"/>
+                <Setter Property="ToolTip" Value="show more"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate x:Key="templateExpandDetails">
+        <ToggleButton IsChecked="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                                          Path=DetailsVisibility, 
+                                          Converter={StaticResource visbilityToBooleanConverter}, 
+                                          Mode=TwoWay}" 
+                       Style="{StaticResource styleExpandDetailsToggleButton}"/>
+    </DataTemplate>
+
+</ResourceDictionary>

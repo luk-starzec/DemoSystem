@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="EmployeeWpfApp.Views.ucIssueList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:EmployeeWpfApp.ViewModels" 
+             d:DataContext="{d:DesignInstance viewModels:IssuesListViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source="/EmployeeWpfApp;component/Styles/ucIssueListStyle.xaml" />
+    </UserControl.Resources>
+
+    <Grid Style="{StaticResource styleGrid}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="{Binding Title}" d:Content="Test"
+               Style="{StaticResource styleTitleLabel}"/>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding IssuesList}" d:ItemsSource="{d:SampleData}" 
+                  Style="{StaticResource styleDataGrid}"
+                  CellStyle="{StaticResource styleCell}"
+                  ColumnHeaderStyle="{StaticResource styleColumnHeader}">
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="" 
+                                        CellTemplate="{StaticResource templateExpandDetails}"/>
+                <DataGridTextColumn Header="App" 
+                                    Binding="{Binding App}"
+                                    MinWidth="80"/>
+                <DataGridTextColumn Header="Title" 
+                                    Binding="{Binding Title}" 
+                                    Width="*"/>
+                <DataGridTextColumn Header="Words" 
+                                    Binding="{Binding WordsCount}"
+                                    CellStyle="{StaticResource styleCellRight}"/>
+                <DataGridTextColumn Header="Priority" 
+                                    Binding="{Binding Priority}"
+                                    CellStyle="{StaticResource styleCellCenter}"/>
+                <DataGridTextColumn Header="Sender" 
+                                    Binding="{Binding Sender}"
+                                    MinWidth="120"/>
+                <DataGridTextColumn Header="Created" 
+                                    Binding="{Binding Created, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                    CellStyle="{StaticResource styleCellCenter}"/>
+                <DataGridTextColumn Header="Status" 
+                                    Binding="{Binding Status}" 
+                                    CellStyle="{StaticResource styleCellCenter}"
+                                    MinWidth="120"/>
+            </DataGrid.Columns>
+
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <StackPanel Style="{StaticResource styleDetailsStackPanel}">
+
+                        <TextBlock>Description</TextBlock>
+
+                        <TextBox Text="{Binding Description}"
+                                 Style="{StaticResource styleDescriptionTextBox}"/>
+
+                        <Button Visibility="{Binding ShowCompleteButton, Converter={StaticResource boolToVisibilityConverter}}"
+                                Command="{Binding CompleteIssueCommand}"
+                                CommandParameter="{Binding .}"
+                                Style="{StaticResource styleCompleteButton}">
+                            <StackPanel>
+                                <Path Data="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M16.59 7.58L10 14.17L7.41 11.59L6 13L10 17L18 9L16.59 7.58Z" />
+                                <TextBlock>Mark as completed</TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
+
+    </Grid>
+
+</UserControl>

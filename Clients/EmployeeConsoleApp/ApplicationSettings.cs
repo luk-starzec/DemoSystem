@@ -4,7 +4,7 @@
     {
         public const string ApplicationSettingsKey = "ApplicationSettings";
         public string UserName { get; set; }
-        public int WordsPerMinute { get; set; }
-        public int DefaultWordsPerMinute { get; } = 10;
+        public int WordsPerSecond { get; set; }
+        public int DefaultWordsPerSecond { get; } = 10;
     }
 }

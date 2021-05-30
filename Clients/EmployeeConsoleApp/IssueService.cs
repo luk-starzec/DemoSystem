@@ -17,9 +17,9 @@ namespace EmployeeConsoleApp
         public IssueService(IOptions<ApplicationSettings> options, IIntegrationEventService integrationEventService, ILogger<IssueService> logger)
         {
             userName = options.Value.UserName;
-            wordsPerSecond = options.Value.WordsPerMinute;
+            wordsPerSecond = options.Value.WordsPerSecond;
             if (wordsPerSecond <= 0)
-                wordsPerSecond = options.Value.DefaultWordsPerMinute;
+                wordsPerSecond = options.Value.DefaultWordsPerSecond;
 
             this.integrationEventService = integrationEventService;
             this.logger = logger;
