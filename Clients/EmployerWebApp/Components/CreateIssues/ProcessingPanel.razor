@@ -1,0 +1,12 @@
+﻿
+@if (Visible)
+{
+    <div class="panel">
+        <img src="/assets/bug-ico.svg" class="bug" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+}

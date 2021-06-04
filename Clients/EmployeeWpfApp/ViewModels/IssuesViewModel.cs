@@ -1,5 +1,4 @@
 ﻿using EmployeeWpfApp.Services;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
@@ -16,14 +15,7 @@ namespace EmployeeWpfApp.ViewModels
         public IssuesListViewModel ToDoList { get; private set; }
         public IssuesListViewModel CompletedList { get; private set; }
 
-        private bool isProcessing;
-        public bool IsProcessing
-        {
-            get => isProcessing;
-            set { isProcessing = value; OnPropertyChanged(); }
-        }
-
-        public System.Windows.Duration ProcessingDuration { get; set; }
+        public ProcessingViewModel ProcessingInfo { get; set; } = new();
 
         public string UserName { get; set; }
 
@@ -72,10 +64,14 @@ namespace EmployeeWpfApp.ViewModels
 
         private void Issue_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            IsProcessing = ToDoIssues.Any(r => r.IsProcessing);
-            
-            var processingTime = ToDoIssues.Where(r => r.IsProcessing).Select(r => r.ProcessingTime).Sum();
-            ProcessingDuration = new System.Windows.Duration(TimeSpan.FromMilliseconds(processingTime));
+            var isProcessing = ToDoIssues.Any(r => r.IsProcessing);
+            ProcessingInfo.IsProcessing = isProcessing;
+
+            if (isProcessing)
+            {
+                var processingTime = ToDoIssues.Where(r => r.IsProcessing).Select(r => r.ProcessingTime).Sum();
+                ProcessingInfo.Animate(processingTime);
+            }
 
             RefreshLists();
         }

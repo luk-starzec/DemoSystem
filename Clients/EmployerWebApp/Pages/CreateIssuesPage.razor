@@ -1,104 +1,21 @@
 ﻿@page "/create-issues"
-@inject IDescriptionService descriptionService
 @inject IIssueService issueService
 
 <PageHeader Title="Create Issues" />
 
 <main class="content p-5">
-    @if (descriptionSources is null)
-    {
-        <div class="alert alert-primary">
-            Loading data...
-        </div>
-    }
-    else
-    {
-        <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit"
-                  class="container">
-            <DataAnnotationsValidator />
 
-            <div class="form-group row">
-                <label class="col col-form-label text-right" for="issues-count">
-                    Quantity:
-                </label>
-                <div class="col">
-                    <InputNumber @bind-Value="model.IssuesCount"
-                                 class="form-control" id="issues-count" min="0" max="100" />
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col col-form-label text-right" for="description">
-                    Description source:
-                </label>
-                <div class="col">
-                    <InputSelect @bind-Value="model.TextSourceId"
-                                 class="form-control" id="description">
-                        @foreach (var item in descriptionSources)
-                            {
-                            <option value="@item.id">@item.name</option>
-                            }
-
-                    </InputSelect>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label class="col col-form-label text-right">
-                    Limit words number:
-                </label>
-                <div class="col input-group align-items-center">
-                    <InputCheckbox @bind-Value="model.LimitWordsCount"
-                                   class="input-group-prepend mx-2" />
-                    <InputNumber @bind-Value="model.MaxWordsCount"
-                                 class="form-control" min="0" max="1000" disabled="@(!model.LimitWordsCount)" />
-                </div>
-            </div>
-
-            <div class="form-group row align-items-center">
-                <label class="col col-form-label text-right" for="randomize-words-count">
-                    Randomize words number:
-                </label>
-                <div class="col">
-                    <InputCheckbox @bind-Value="model.RandomizeWordsCount"
-                                   class="mx-2" id="randomize-words-count" />
-                </div>
-            </div>
-
-            <div class="col text-center">
-                <ValidationSummary />
-            </div>
-
-            <button type="submit" class="btn btn-primary col mt-3" disabled="@disableButton">
-                @buttonText
-            </button>
-
-        </EditForm>
-    }
+    <CreateIssuesForm Processing="processing" OnValidSubmit="Generate" />
 
 </main>
 
 @code {
-    private IssueGenerationModel model = new();
-    private List<(string name, int id)> descriptionSources;
+    bool processing = false;
 
-    bool disableButton = false;
-    string buttonText => disableButton ? "Please wait..." : "Generate issues";
-
-    protected override async Task OnInitializedAsync()
+    private async Task Generate(IssueGenerationModel model)
     {
-        descriptionSources = await descriptionService.GetDescriptionSourceNamesAsync();
-
-        model.IssuesCount = 1;
-        model.LimitWordsCount = true;
-        model.MaxWordsCount = 100;
-        model.RandomizeWordsCount = true;
-    }
-
-    private async Task HandleValidSubmit()
-    {
-        disableButton = true;
+        processing = true;
         await issueService.GenerateIssuesAsync(model);
-        disableButton = false;
+        processing = false;
     }
 }

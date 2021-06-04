@@ -8,6 +8,11 @@
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style TargetType="{x:Type views:ucProcessing}">
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Margin" Value="2 0"/>
+    </Style>
+    
     <Style TargetType="{x:Type GridSplitter}">
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Background" Value="#F7F9FA"/>

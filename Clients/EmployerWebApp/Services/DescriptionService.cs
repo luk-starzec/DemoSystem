@@ -12,7 +12,7 @@ namespace EmployerWebApp.Services
     {
         private readonly string descriptionProviderUrl;
 
-        public DescriptionService(IOptions<ServicesSettings> options)
+        public DescriptionService(IOptions<ServiceUrls> options)
         {
             descriptionProviderUrl = options.Value.DescriptionProviderUrl;
         }

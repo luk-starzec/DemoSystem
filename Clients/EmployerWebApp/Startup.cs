@@ -1,4 +1,5 @@
 using EmployerWebApp.Data;
+using EmployerWebApp.Helpers;
 using EmployerWebApp.Models;
 using EmployerWebApp.Services;
 using Microsoft.AspNetCore.Builder;
@@ -28,12 +29,17 @@ namespace EmployerWebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.Configure<ServicesSettings>(Configuration.GetSection(ServicesSettings.ServicesSettingsKey));
+            services.Configure<ServiceUrls>(Configuration.GetSection(ServiceUrls.ServiceUrlsKey));
+            var serviceUrls = Configuration.GetSection(ServiceUrls.ServiceUrlsKey).Get<ServiceUrls>();
 
-            services.AddHttpClient<IssueService>();
+            services.AddHttpClient(HttpClientNames.PrioritySetterClient, c => c.BaseAddress = new Uri(serviceUrls.PrioritySetterUrl));
+            services.AddHttpClient(HttpClientNames.HeaderProviderClient, c => c.BaseAddress = new Uri(serviceUrls.HeaderProviderUrl));
+            services.AddHttpClient(HttpClientNames.IssueGeneratorClient, c => c.BaseAddress = new Uri(serviceUrls.IssueGeneratorUrl));
+            services.AddHttpClient(HttpClientNames.ReportServerClient, c => c.BaseAddress = new Uri(serviceUrls.ReportServiceUrl));
+
             services.AddTransient<IIssueService, IssueService>();
             services.AddTransient<IDescriptionService, DescriptionService>();
-            services.AddHttpClient<IReportService>();
+            services.AddTransient<IPriorityService, PriorityService>();
             services.AddTransient<IReportService, ReportService>();
 
             services.AddSingleton<WeatherForecastService>();

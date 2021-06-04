@@ -12,23 +12,26 @@ namespace HeaderProvider.Services
     public class HeaderService : IHeaderService
     {
         private readonly string[] apps;
-        private readonly string[] errors;
+        private readonly string[] titles;
 
         private Random random = new();
 
         public HeaderService(IWebHostEnvironment webHostEnvironment)
         {
             apps = GetData(webHostEnvironment.ContentRootPath, "apps");
-            errors = GetData(webHostEnvironment.ContentRootPath, "errors");
+            titles = GetData(webHostEnvironment.ContentRootPath, "titles");
         }
 
         public HeaderModel GetHeader()
         {
             int a = random.Next(apps.Length);
-            int e = random.Next(errors.Length);
-            return new HeaderModel(apps[a], errors[e]);
+            int e = random.Next(titles.Length);
+            return new HeaderModel(apps[a], titles[e]);
         }
 
+        public string[] GetApps() => apps;
+
+        public string[] GetTitles() => titles;
 
         private string[] GetData(string contentRootPath, string fileName)
         {

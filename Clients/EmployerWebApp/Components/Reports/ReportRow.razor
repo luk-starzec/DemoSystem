@@ -38,13 +38,12 @@
 
     string cssRow => Issue.DetailsVisible ? "font-weight-bold selected-row" : "";
 
-    string cssPriority =>
-       Issue.Priority switch
-       {
-           "High" => "alert-danger",
-           "Normal" => "alert-primary",
-           _ => "alert-secondary"
-       };
+    string cssPriority => Issue.PriorityEnum switch
+    {
+        EnumPriority.High => "alert-danger",
+        EnumPriority.Normal => "alert-primary",
+        _ => "alert-secondary"
+    };
 
     async Task DetailsButtonClick()
     {

@@ -40,8 +40,8 @@ namespace PrioritySetter.Services
 
         private async Task<Priority> GetErrorPriority(string error)
         {
-            return await dbContext.ErrorPriority
-                 .Where(r => r.Error.ToLower() == error.ToLower())
+            return await dbContext.TitlePriority
+                 .Where(r => r.Title.ToLower() == error.ToLower())
                  .Select(r => r.PriorityRelation)
                  .SingleOrDefaultAsync();
         }

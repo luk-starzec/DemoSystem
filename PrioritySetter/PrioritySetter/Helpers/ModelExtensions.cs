@@ -9,20 +9,20 @@ namespace PrioritySetter.Helpers
 {
     public static class ModelExtensions
     {
-        public static ErrorPriorityModel ToModel(this ErrorPriority entity)
+        public static TitlePriorityModel ToModel(this TitlePriority entity)
         {
-            return new ErrorPriorityModel
+            return new TitlePriorityModel
             {
-                Error = entity.Error,
+                Title = entity.Title,
                 PriorityLevelId = (int)entity.PriorityLevel,
             };
         }
 
-        public static ErrorPriority ToEntity(this ErrorPriorityModel model)
+        public static TitlePriority ToEntity(this TitlePriorityModel model)
         {
-            return new ErrorPriority
+            return new TitlePriority
             {
-                Error = model.Error,
+                Title = model.Title,
                 PriorityLevel = (EnumPriorityLevel)model.PriorityLevelId,
             };
         }

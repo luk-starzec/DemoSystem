@@ -38,54 +38,6 @@ namespace PrioritySetter.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PrioritySetter.Data.ErrorPriority", b =>
-                {
-                    b.Property<string>("Error")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PriorityLevel")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("PriorityLevelId");
-
-                    b.HasKey("Error");
-
-                    b.HasIndex("PriorityLevel");
-
-                    b.ToTable("ErrorPriorities");
-
-                    b.HasData(
-                        new
-                        {
-                            Error = "NullReferenceException",
-                            PriorityLevel = 3
-                        },
-                        new
-                        {
-                            Error = "ArgumentNullException",
-                            PriorityLevel = 3
-                        },
-                        new
-                        {
-                            Error = "OutOfMemoryException",
-                            PriorityLevel = 3
-                        },
-                        new
-                        {
-                            Error = "MissingFieldException",
-                            PriorityLevel = 1
-                        },
-                        new
-                        {
-                            Error = "MissingMemberException",
-                            PriorityLevel = 1
-                        },
-                        new
-                        {
-                            Error = "MissingMethodException",
-                            PriorityLevel = 1
-                        });
-                });
-
             modelBuilder.Entity("PrioritySetter.Data.Priority", b =>
                 {
                     b.Property<int>("PriorityLevel")
@@ -123,6 +75,54 @@ namespace PrioritySetter.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PrioritySetter.Data.TitlePriority", b =>
+                {
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("PriorityLevelId");
+
+                    b.HasKey("Title");
+
+                    b.HasIndex("PriorityLevel");
+
+                    b.ToTable("TitlePriorities");
+
+                    b.HasData(
+                        new
+                        {
+                            Title = "NullReferenceException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Title = "ArgumentNullException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Title = "OutOfMemoryException",
+                            PriorityLevel = 3
+                        },
+                        new
+                        {
+                            Title = "MissingFieldException",
+                            PriorityLevel = 1
+                        },
+                        new
+                        {
+                            Title = "MissingMemberException",
+                            PriorityLevel = 1
+                        },
+                        new
+                        {
+                            Title = "MissingMethodException",
+                            PriorityLevel = 1
+                        });
+                });
+
             modelBuilder.Entity("PrioritySetter.Data.AppPriority", b =>
                 {
                     b.HasOne("PrioritySetter.Data.Priority", "PriorityRelation")
@@ -134,7 +134,7 @@ namespace PrioritySetter.Migrations
                     b.Navigation("PriorityRelation");
                 });
 
-            modelBuilder.Entity("PrioritySetter.Data.ErrorPriority", b =>
+            modelBuilder.Entity("PrioritySetter.Data.TitlePriority", b =>
                 {
                     b.HasOne("PrioritySetter.Data.Priority", "PriorityRelation")
                         .WithMany()

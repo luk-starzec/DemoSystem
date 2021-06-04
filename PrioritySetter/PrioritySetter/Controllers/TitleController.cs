@@ -14,12 +14,12 @@ namespace PrioritySetter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ErrorsController : ControllerBase
+    public class TitleController : ControllerBase
     {
         private readonly PrioritySetterContext _context;
-        private readonly ILogger<ErrorsController> _logger;
+        private readonly ILogger<TitleController> _logger;
 
-        public ErrorsController(PrioritySetterContext context, ILogger<ErrorsController> logger)
+        public TitleController(PrioritySetterContext context, ILogger<TitleController> logger)
         {
             _context = context;
             _logger = logger;
@@ -27,16 +27,16 @@ namespace PrioritySetter.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ErrorPriorityModel>>> GetErrorPriority()
+        public async Task<ActionResult<IEnumerable<TitlePriorityModel>>> GetTitlePriority()
         {
-            var entities = await _context.ErrorPriority.ToListAsync();
+            var entities = await _context.TitlePriority.ToListAsync();
             return entities.Select(r => r.ToModel()).ToList();
         }
 
-        [HttpGet("{error}")]
-        public async Task<ActionResult<ErrorPriorityModel>> GetErrorPriority(string error)
+        [HttpGet("{title}")]
+        public async Task<ActionResult<TitlePriorityModel>> GetTitlePriority(string title)
         {
-            var entity = await _context.ErrorPriority.FindAsync(error);
+            var entity = await _context.TitlePriority.FindAsync(title);
 
             if (entity == null)
                 return NotFound();
@@ -44,10 +44,10 @@ namespace PrioritySetter.Controllers
             return entity.ToModel();
         }
 
-        [HttpPut("{error}")]
-        public async Task<IActionResult> PutErrorPriority(string error, int priorityId)
+        [HttpPut("{title}")]
+        public async Task<IActionResult> PutTitlePriority(string title, [FromBody] int priorityId)
         {
-            var entity = await _context.ErrorPriority.FindAsync(error);
+            var entity = await _context.TitlePriority.FindAsync(title);
 
             if (entity is null)
                 return NotFound();
@@ -62,44 +62,44 @@ namespace PrioritySetter.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ErrorPriorityModel>> PostErrorPriority(ErrorPriorityModel errorPriority)
+        public async Task<ActionResult<TitlePriorityModel>> PostTitlePriority(TitlePriorityModel errorPriority)
         {
-            if (string.IsNullOrWhiteSpace(errorPriority.Error) || !CheckPriority(errorPriority.PriorityLevelId))
+            if (string.IsNullOrWhiteSpace(errorPriority.Title) || !CheckPriority(errorPriority.PriorityLevelId))
                 return BadRequest();
 
             var entity = errorPriority.ToEntity();
-            _context.ErrorPriority.Add(entity);
+            _context.TitlePriority.Add(entity);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ErrorPriorityExists(errorPriority.Error))
+                if (TitlePriorityExists(errorPriority.Title))
                     return Conflict();
 
                 throw;
             }
 
-            return CreatedAtAction(nameof(GetErrorPriority), new { error = errorPriority.Error }, errorPriority);
+            return CreatedAtAction(nameof(GetTitlePriority), new { error = errorPriority.Title }, errorPriority);
         }
 
-        [HttpDelete("{error}")]
-        public async Task<IActionResult> DeleteErrorPriority(string error)
+        [HttpDelete("{title}")]
+        public async Task<IActionResult> DeleteTitlePriority(string title)
         {
-            var errorPriority = await _context.ErrorPriority.FindAsync(error);
+            var errorPriority = await _context.TitlePriority.FindAsync(title);
             if (errorPriority == null)
                 return NotFound();
 
-            _context.ErrorPriority.Remove(errorPriority);
+            _context.TitlePriority.Remove(errorPriority);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ErrorPriorityExists(string error)
+        private bool TitlePriorityExists(string title)
         {
-            return _context.ErrorPriority.Any(e => e.Error == error);
+            return _context.TitlePriority.Any(e => e.Title == title);
         }
 
         private bool CheckPriority(int priorityId)

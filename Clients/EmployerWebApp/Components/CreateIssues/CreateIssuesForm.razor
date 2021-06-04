@@ -1,0 +1,49 @@
+﻿@inject IDescriptionService descriptionService
+
+@if (descriptionSources is null)
+{
+    <div class="alert alert-primary">
+        Loading data...
+    </div>
+}
+else
+{
+
+    <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <CreateIssuesFields @bind-Model="model" DescriptionSources="descriptionSources" Processing="@Processing" />
+
+        <button type="submit" class="btn btn-primary col mt-3" disabled="@Processing">
+            @buttonText
+        </button>
+
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public bool Processing { get; set; }
+    [Parameter]
+    public EventCallback<IssueGenerationModel> OnValidSubmit { get; set; }
+
+    private List<(string name, int id)> descriptionSources;
+    private IssueGenerationModel model = new();
+
+    string buttonText => Processing ? "Please wait..." : "Generate issues";
+
+    protected override async Task OnInitializedAsync()
+    {
+        descriptionSources = await descriptionService.GetDescriptionSourceNamesAsync();
+
+        model.IssuesCount = 1;
+        model.LimitWordsCount = true;
+        model.MaxWordsCount = 100;
+        model.RandomizeWordsCount = true;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await OnValidSubmit.InvokeAsync(model);
+    }
+}

@@ -27,31 +27,31 @@
             };
         }
 
-        public static ErrorPriority[] GetErrorPriorities()
+        public static TitlePriority[] GetTitlePriorities()
         {
-            return new ErrorPriority[] {
-                new ErrorPriority{
-                    Error =   "NullReferenceException",
+            return new TitlePriority[] {
+                new TitlePriority{
+                    Title = "NullReferenceException",
                     PriorityLevel = EnumPriorityLevel.High,
                 },
-                new ErrorPriority{
-                    Error =   "ArgumentNullException",
+                new TitlePriority{
+                    Title = "ArgumentNullException",
                     PriorityLevel = EnumPriorityLevel.High,
                 },
-                new ErrorPriority{
-                    Error =   "OutOfMemoryException",
+                new TitlePriority{
+                    Title = "OutOfMemoryException",
                     PriorityLevel = EnumPriorityLevel.High,
                 },
-                new ErrorPriority{
-                    Error =   "MissingFieldException",
+                new TitlePriority{
+                    Title = "MissingFieldException",
                     PriorityLevel = EnumPriorityLevel.Low,
                 },
-                new ErrorPriority{
-                    Error =   "MissingMemberException",
+                new TitlePriority{
+                    Title = "MissingMemberException",
                     PriorityLevel = EnumPriorityLevel.Low,
                 },
-                new ErrorPriority{
-                    Error =   "MissingMethodException",
+                new TitlePriority{
+                    Title = "MissingMethodException",
                     PriorityLevel = EnumPriorityLevel.Low,
                 },
             };
@@ -68,6 +68,5 @@
                 },
             };
         }
-
     }
 }

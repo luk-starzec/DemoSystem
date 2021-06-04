@@ -1,0 +1,19 @@
+﻿<tr>
+
+    <td class="align-middle text-center">
+        @Model.Name
+    </td>
+
+    <td class="text-center">
+        <PriorityCell Priority="@Model.Priority" />
+    </td>
+
+    <td>
+    </td>
+
+</tr>
+
+@code {
+    [Parameter]
+    public PriorityModel Model { get; set; }
+}

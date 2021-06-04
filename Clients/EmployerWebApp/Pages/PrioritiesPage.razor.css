@@ -1,0 +1,9 @@
+﻿
+::deep label{
+    margin-bottom: 0;
+    min-width: 6em;
+}
+
+:deep th{
+    vertical-align: middle;
+}

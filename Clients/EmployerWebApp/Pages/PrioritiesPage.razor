@@ -1,7 +1,99 @@
 ﻿@page "/priorities"
 
+@inject IPriorityService priorityService
+
 <PageHeader Title="Priorities" />
 
-@code {
+<main class="content p-3">
 
+    @if (titlePriorities is null)
+    {
+        <div class="alert alert-primary">
+            Loading data...
+        </div>
+    }
+    else
+    {
+        <PriorityModelList HeaderText="Titles" Names="titles" Items="titlePriorities" 
+                           OnAdd="AddTitle" OnSave="SaveTitle" OnDelete="DeleteTitle" />
+    }
+
+    @if (appPriorities is null)
+    {
+        <div class="alert alert-primary">
+            Loading data...
+        </div>
+    }
+    else
+    {
+        <PriorityModelList HeaderText="Apps" Names="apps" Items="appPriorities" 
+                           OnAdd="AddApp" OnSave="SaveApp" OnDelete="DeleteApp" />
+    }
+
+</main>
+
+@code {
+    List<PriorityModel> titlePriorities;
+    List<string> titles;
+    List<PriorityModel> appPriorities;
+    List<string> apps;
+
+    protected override async Task OnInitializedAsync()
+    {
+        titles = await priorityService.GetTitlesAsync();
+        titles.Insert(0, null);
+
+        titlePriorities = await priorityService.GetTitlePrioritiesAsync();
+
+        apps = await priorityService.GetAppsAsync();
+        apps.Insert(0, null);
+
+        appPriorities = await priorityService.GetAppPrioritiesAsync();
+    }
+
+    async Task AddTitle(PriorityModel model)
+    {
+        await priorityService.AddTitlePriorityAsync(model);
+
+        titlePriorities.Add(model);
+    }
+
+    async Task SaveTitle(PriorityModel model)
+    {
+        await priorityService.SaveTitlePriorityAsync(model);
+
+        var item = titlePriorities.Where(r => r.Name == model.Name).Single();
+        item.Priority = model.Priority;
+    }
+
+    async Task DeleteTitle(PriorityModel model)
+    {
+        await priorityService.DeleteTitlePriorityAsync(model);
+
+        var item = titlePriorities.Where(r => r.Name == model.Name).Single();
+        titlePriorities.Remove(item);
+    }
+
+    async Task AddApp(PriorityModel model)
+    {
+        await priorityService.AddAppPriorityAsync(model);
+
+        appPriorities.Add(model);
+    }
+
+    async Task SaveApp(PriorityModel model)
+    {
+        await priorityService.SaveAppPriorityAsync(model);
+
+        var item = appPriorities.Where(r => r.Name == model.Name).Single();
+        item.Priority = model.Priority;
+    }
+
+    async Task DeleteApp(PriorityModel model)
+    {
+        await priorityService.DeleteAppPriorityAsync(model);
+
+        var item = appPriorities.Where(r => r.Name == model.Name).Single();
+        appPriorities.Remove(item);
+    }
 }

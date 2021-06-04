@@ -29,11 +29,11 @@
                     Logs
                 </div>
 
-                <ul class="border rounded-bottom bg-white">
+                <ul class="border rounded-bottom bg-white p-0">
                     @foreach (var log in Issue.SortedLogs)
                     {
-                        <li class="row" @key="log">
-                            <div class="col">
+                        <li class="row m-0">
+                            <div class="col pr-0">
                                 @log.Date.ToString("yyyy-MM-dd HH:mm:ss")
                             </div>
                             <div class="col">

@@ -7,3 +7,7 @@
 ::deep select {
     max-width: 15rem;
 }
+
+::deep ul {
+    list-style: none
+}

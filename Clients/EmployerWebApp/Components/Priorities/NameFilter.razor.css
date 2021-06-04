@@ -1,0 +1,8 @@
+﻿button {
+    border: 1px solid #ced4da;
+    border-left: none;
+}
+
+button:disabled{
+    opacity: 1;
+}

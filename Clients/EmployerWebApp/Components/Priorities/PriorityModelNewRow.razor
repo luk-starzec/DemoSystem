@@ -1,0 +1,81 @@
+﻿<tr>
+    @if (showDetails)
+    {
+        <td>
+            <select @bind="model.Name" class="form-control @cssName" @onclick="CheckName">
+                @foreach (var name in Names)
+                {
+                    <option value="@name">@name</option>
+                }
+            </select>
+        </td>
+
+        <td class="text-center">
+            <PriorityEditCell @bind-Priority="model.Priority" />
+        </td>
+
+        <td class="text-center">
+            <button class="btn btn-sm alert-secondary px-4" @onclick="Add">
+                <span class="oi oi-plus"></span>
+                Add
+            </button>
+        </td>
+
+    }
+    else
+    {
+        <td colspan="3">
+            <button class="btn col btn-primary" @onclick="ShowDetails">
+                <span class="oi oi-plus mr-3"></span>
+                Add new item
+            </button>
+        </td>
+    }
+</tr>
+
+@code {
+    [Parameter]
+    public List<string> Names { get; set; } = new List<string>();
+    [Parameter]
+    public EventCallback<PriorityModel> OnAdd { get; set; }
+
+    PriorityModel model;
+
+    bool showDetails = false;
+    bool showError = false;
+
+    string cssName => showError ? "invalid" : "";
+
+    protected override void OnInitialized()
+    {
+        SetEmptyModel();
+    }
+
+    void ShowDetails()
+    {
+        SetEmptyModel();
+        showDetails = true;
+    }
+
+    async Task Add()
+    {
+        CheckName();
+        if (showError)
+            return;
+
+        await OnAdd.InvokeAsync(model);
+
+        SetEmptyModel();
+    }
+
+    void CheckName() => showError = string.IsNullOrEmpty(model.Name);
+
+    void SetEmptyModel() =>
+        model = new()
+        {
+            Name = null,
+            Priority = EnumPriority.Normal,
+        };
+
+}
+

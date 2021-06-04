@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
-using PrioritySetter.Data;
 
 namespace PrioritySetter.Data
 {
@@ -14,17 +8,17 @@ namespace PrioritySetter.Data
             : base(options)
         { }
 
-        public DbSet<ErrorPriority> ErrorPriority { get; set; }
+        public DbSet<TitlePriority> TitlePriority { get; set; }
         public DbSet<AppPriority> AppPriority { get; set; }
         public DbSet<Priority> Priority { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ErrorPriority>(entity =>
+            modelBuilder.Entity<TitlePriority>(entity =>
             {
-                entity.ToTable("ErrorPriorities");
-                entity.HasKey(r => r.Error);
+                entity.ToTable("TitlePriorities");
+                entity.HasKey(r => r.Title);
                 entity.Property(r => r.PriorityLevel).HasConversion<int>().HasColumnName("PriorityLevelId");
                 entity.HasOne(r => r.PriorityRelation).WithMany().HasForeignKey(r => r.PriorityLevel);
             });
@@ -45,12 +39,10 @@ namespace PrioritySetter.Data
             });
 
             modelBuilder.Entity<Priority>().HasData(InitialData.GetPriorities());
-            modelBuilder.Entity<ErrorPriority>().HasData(InitialData.GetErrorPriorities());
+            modelBuilder.Entity<TitlePriority>().HasData(InitialData.GetTitlePriorities());
             modelBuilder.Entity<AppPriority>().HasData(InitialData.GetAppPriorities());
 
             base.OnModelCreating(modelBuilder);
         }
-
-
     }
 }

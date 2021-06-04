@@ -1,0 +1,39 @@
+﻿
+<label class="input-group">
+
+    <span class="input-group-prepend">
+        <span class="input-group-text">
+            <span class="oi oi-magnifying-glass"></span>
+        </span>
+    </span>
+
+    <input type="text" class="form-control" value="@Text" @oninput="ChangeText" />
+
+    <span class="input-group-append">
+        <button class="btn btn-outline-light bg-white" @onclick="ClearText" disabled="@isEmpty">
+            <span class="oi oi-x"></span>
+        </button>
+    </span>
+
+</label>
+
+@code {
+    [Parameter]
+    public string Text { get; set; }
+    [Parameter]
+    public EventCallback<string> TextChanged { get; set; }
+
+    bool isEmpty => string.IsNullOrEmpty(Text);
+
+    async Task ChangeText(ChangeEventArgs args)
+    {
+        Text = args.Value as string;
+        await TextChanged.InvokeAsync(Text);
+    }
+
+    async Task ClearText()
+    {
+        Text = null;
+        await TextChanged.InvokeAsync(Text);
+    }
+}

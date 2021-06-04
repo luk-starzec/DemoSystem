@@ -26,9 +26,8 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <!--<views:ucProcessing DataContext="{Binding ProcessingDuration}" 
-                            Height="20"
-                            Visibility="{Binding IsProcessing, Converter={StaticResource booleanToVisibilityConverter}}"/>-->
+        <views:ucProcessing DataContext="{Binding ProcessingInfo}" 
+                            Visibility="{Binding IsProcessing, Converter={StaticResource booleanToVisibilityConverter}}"/>
 
         <views:ucUser Grid.Column="1" DataContext="{Binding UserName}"/>
 
@@ -38,7 +37,7 @@
 
         <views:ucLoader Grid.Row="1" 
                         Grid.ColumnSpan="2"
-                        Visibility="{Binding IsProcessing, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        Visibility="{Binding ProcessingInfo.IsProcessing, Converter={StaticResource booleanToVisibilityConverter}}"/>
 
         <GridSplitter Grid.Row="2"
                       Grid.ColumnSpan="2"/>

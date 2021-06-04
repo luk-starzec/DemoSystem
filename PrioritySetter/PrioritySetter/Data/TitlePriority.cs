@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace PrioritySetter.Data
 {
-    public class ErrorPriority
+    public class TitlePriority
     {
-        public string Error { get; set; }
+        public string Title { get; set; }
         public EnumPriorityLevel PriorityLevel { get; set; }
         public Priority PriorityRelation { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using EmployerWebApp.Helpers;
 using System;
 using System.Linq;
 
@@ -19,5 +19,8 @@ namespace EmployerWebApp.Models
         public bool DetailsVisible { get; set; }
 
         public EventLogModel[] SortedLogs => Logs.OrderByDescending(r => r.Date).ToArray();
+
+        //public string PriorityText => Priority.GetDescription();
+        public EnumPriority PriorityEnum => Priority is null ? EnumPriority.None : (EnumPriority)Enum.Parse(typeof(EnumPriority), Priority);
     }
 }

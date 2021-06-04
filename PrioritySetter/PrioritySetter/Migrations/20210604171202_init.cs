@@ -38,17 +38,17 @@ namespace PrioritySetter.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ErrorPriorities",
+                name: "TitlePriorities",
                 columns: table => new
                 {
-                    Error = table.Column<string>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
                     PriorityLevelId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ErrorPriorities", x => x.Error);
+                    table.PrimaryKey("PK_TitlePriorities", x => x.Title);
                     table.ForeignKey(
-                        name: "FK_ErrorPriorities_DicPriorityLevels_PriorityLevelId",
+                        name: "FK_TitlePriorities_DicPriorityLevels_PriorityLevelId",
                         column: x => x.PriorityLevelId,
                         principalTable: "DicPriorityLevels",
                         principalColumn: "PriorityLevelId",
@@ -76,33 +76,33 @@ namespace PrioritySetter.Migrations
                 values: new object[] { "Glob", 1 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "NullReferenceException", 3 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "ArgumentNullException", 3 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "OutOfMemoryException", 3 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "MissingFieldException", 1 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "MissingMemberException", 1 });
 
             migrationBuilder.InsertData(
-                table: "ErrorPriorities",
-                columns: new[] { "Error", "PriorityLevelId" },
+                table: "TitlePriorities",
+                columns: new[] { "Title", "PriorityLevelId" },
                 values: new object[] { "MissingMethodException", 1 });
 
             migrationBuilder.CreateIndex(
@@ -111,8 +111,8 @@ namespace PrioritySetter.Migrations
                 column: "PriorityLevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ErrorPriorities_PriorityLevelId",
-                table: "ErrorPriorities",
+                name: "IX_TitlePriorities_PriorityLevelId",
+                table: "TitlePriorities",
                 column: "PriorityLevelId");
         }
 
@@ -122,7 +122,7 @@ namespace PrioritySetter.Migrations
                 name: "AppPriorities");
 
             migrationBuilder.DropTable(
-                name: "ErrorPriorities");
+                name: "TitlePriorities");
 
             migrationBuilder.DropTable(
                 name: "DicPriorityLevels");

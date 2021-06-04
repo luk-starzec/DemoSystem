@@ -44,7 +44,7 @@ namespace PrioritySetter.Controllers
         }
 
         [HttpPut("{app}")]
-        public async Task<IActionResult> PutAppPriority(string app, int priorityId)
+        public async Task<IActionResult> PutAppPriority(string app, [FromBody] int priorityId)
         {
             var entity = await _context.AppPriority.FindAsync(app);
 

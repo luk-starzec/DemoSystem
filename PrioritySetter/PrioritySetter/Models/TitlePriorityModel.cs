@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace PrioritySetter.Models
 {
-    public class ErrorPriorityModel
+    public class TitlePriorityModel
     {
-        public string Error { get; set; }
+        public string Title { get; set; }
         public int PriorityLevelId { get; set; }
     }
 }

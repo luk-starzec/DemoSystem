@@ -1,9 +1,7 @@
-﻿using EmployerWebApp.Models;
+﻿using EmployerWebApp.Helpers;
+using EmployerWebApp.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -16,10 +14,9 @@ namespace EmployerWebApp.Services
         private readonly HttpClient client;
         private readonly ILogger<IssueService> logger;
 
-        public ReportService(HttpClient client, IOptions<ServicesSettings> options, ILogger<IssueService> logger)
+        public ReportService(IHttpClientFactory clientFactory, ILogger<IssueService> logger)
         {
-            client.BaseAddress = new Uri(options.Value.ReportServiceUrl);
-            this.client = client;
+            this.client = clientFactory.CreateClient(HttpClientNames.ReportServerClient);
             this.logger = logger;
         }
 

@@ -1,7 +1,5 @@
 ﻿@page "/reports"
 
-@using System.Timers
-@implements IDisposable
 @inject IReportService reportService
 
 <PageHeader Title="Reports" />
@@ -17,9 +15,7 @@
     else
     {
         <div class="d-flex justify-content-end mb-2">
-            <button class="btn btn-sm @cssPollingButton" @onclick="PollingButtonClick">
-                @textPollingButton
-            </button>
+            <PollingButton OnTick="@LoadIssues"  />
         </div>
 
         @if (issues.Any())
@@ -58,28 +54,17 @@
 @code {
     private List<IssueModel> issues;
 
-    private Timer timer;
-
     bool isPolling = true;
     string textPollingButton => isPolling ? "Stop polling" : "Start polling";
     string cssPollingButton => isPolling ? "btn-primary" : "btn-secondary";
+    string icoPollingButton => isPolling ? "oi-media-pause" : "oi-media-play";
 
     bool isAnyDetailsVisible => issues?.Where(r => r.DetailsVisible).Any() ?? false;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadIssues();
-
-        timer = new()
-        {
-            Interval = 1_000,
-            AutoReset = true,
-            Enabled = isPolling,
-        };
-        timer.Elapsed += async (_, _) => await InvokeAsync(LoadIssues);
     }
-
-    public void Dispose() => timer?.Dispose();
 
     async Task LoadIssues()
     {
@@ -87,12 +72,6 @@
         newData.ForEach(r => r.DetailsVisible = issues?.SingleOrDefault(rr => rr.Id == r.Id)?.DetailsVisible ?? false);
         issues = newData;
         StateHasChanged();
-    }
-
-    void PollingButtonClick()
-    {
-        isPolling = !isPolling;
-        timer.Enabled = isPolling;
     }
 
     void ShowAllDetails(bool detailsVisible)

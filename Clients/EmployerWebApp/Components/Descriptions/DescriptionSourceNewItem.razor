@@ -7,7 +7,7 @@
         <span class="col">Add new</span>
     </summary>
 
-    <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit" class="p-3">
+    <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit" class="p-3 position-relative">
 
         <DataAnnotationsValidator />
 
@@ -25,6 +25,8 @@
                 <span>@buttonText</span>
             </button>
         </div>
+
+        <MaskPanel Visible="disableButton"/>
 
     </EditForm>
 

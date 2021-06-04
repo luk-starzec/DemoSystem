@@ -1,0 +1,140 @@
+﻿
+<details class="mt-4">
+
+    <summary class="bg-secondary text-white d-flex justify-content-center align-items-center rounded">
+        <h4 class="m-0 p-2 text-center flex-grow-1">
+            @HeaderText
+        </h4>
+    </summary>
+
+    <div class="position-relative">
+
+        <MaskPanel Visible="@processing" />
+
+        <table class="table">
+
+            <thead class="bg-secondary text-white">
+
+                <tr>
+                    <th>
+                        <NameFilter @bind-Text="searchText" />
+                    </th>
+
+                    <th>
+                        <PriorityFilter @bind-Low="isLow" @bind-Normal="isNormal" @bind-High="isHigh" />
+                    </th>
+
+                    <th style="width: 15em;">
+                        <button class="btn btn-dark form-control" @onclick="EditButtonClick">
+                            @if (edit)
+                            {
+                                <span class="oi oi-eye mr-2"></span>
+                                <span>View</span>
+                            }
+                            else
+                            {
+                                <span class="oi oi-pencil mr-2"></span>
+                                <span>Edit</span>
+                            }
+                        </button>
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in filteredItems)
+                {
+                    if (edit)
+                    {
+                        <PriorityModelEditRow Model="@item" OnSave="SaveItem" OnDelete="DeleteItem" />
+                    }
+                    else
+                    {
+                        <PriorityModelRow Model="@item" />
+                    }
+                }
+
+                @if (edit)
+                {
+                    <PriorityModelNewRow Names="@availableNames" OnAdd="AddItem" />
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</details>
+
+
+@code {
+    [Parameter]
+    public string HeaderText { get; set; }
+    [Parameter]
+    public List<PriorityModel> Items { get; set; }
+    [Parameter]
+    public List<string> Names { get; set; }
+
+    [Parameter]
+    public EventCallback<PriorityModel> OnAdd { get; set; }
+    [Parameter]
+    public EventCallback<PriorityModel> OnSave { get; set; }
+    [Parameter]
+    public EventCallback<PriorityModel> OnDelete { get; set; }
+
+    string searchText = "";
+
+    bool isLow = true;
+    bool isNormal = true;
+    bool isHigh = true;
+
+    IEnumerable<PriorityModel> filteredItems => Items.Where(r => IsMatchingItem(r)).OrderBy(r => r.Name);
+
+    bool edit;
+    bool processing;
+
+    List<string> availableNames => Names.Where(r => !isNameUsed(r)).OrderBy(r => r).ToList();
+
+    bool isNameUsed(string name) => Items.Any(r => r.Name == name);
+
+    void EditButtonClick() => edit = !edit;
+
+
+    async Task AddItem(PriorityModel model)
+    {
+        processing = true;
+        await OnAdd.InvokeAsync(model);
+        processing = false;
+    }
+    async Task SaveItem(PriorityModel model)
+    {
+        processing = true;
+        await OnSave.InvokeAsync(model);
+        processing = false;
+    }
+
+    async Task DeleteItem(PriorityModel model)
+    {
+        processing = true;
+        await OnDelete.InvokeAsync(model);
+        processing = false;
+    }
+
+    bool IsMatchingItem(PriorityModel item)
+    {
+        if (!string.IsNullOrWhiteSpace(searchText) && !item.Name.ToLower().Contains(searchText.ToLower()))
+            return false;
+
+        if (item.Priority == EnumPriority.Low && !isLow)
+            return false;
+        if (item.Priority == EnumPriority.Normal && !isNormal)
+            return false;
+        if (item.Priority == EnumPriority.High && !isHigh)
+            return false;
+
+        return true;
+    }
+}

@@ -1,0 +1,39 @@
+﻿@using System.Timers
+@implements IDisposable
+
+<button class="btn btn-sm @cssPollingButton" @onclick="ButtonClick">
+    <span class="oi @icoPollingButton align-text-top mr-1"></span>
+    @textPollingButton
+</button>
+
+@code {
+    [Parameter]
+    public EventCallback OnTick { get; set; }
+
+    public bool isPolling = true;
+
+    string textPollingButton => isPolling ? "Stop polling" : "Start polling";
+    string cssPollingButton => isPolling ? "btn-primary" : "btn-secondary";
+    string icoPollingButton => isPolling ? "oi-media-pause" : "oi-media-play";
+
+    private Timer timer;
+
+    protected override void OnInitialized()
+    {
+        timer = new()
+        {
+            Interval = 1_000,
+            AutoReset = true,
+            Enabled = isPolling,
+        };
+        timer.Elapsed += async (_, _) => await InvokeAsync(OnTick.InvokeAsync);
+    }
+
+    public void Dispose() => timer?.Dispose();
+
+    void ButtonClick()
+    {
+        isPolling = !isPolling;
+        timer.Enabled = isPolling;
+    }
+}
