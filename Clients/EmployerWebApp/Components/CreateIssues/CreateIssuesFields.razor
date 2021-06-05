@@ -2,19 +2,24 @@
 <div class="container position-relative">
 
     <div class="form-group row">
+
         <label class="col col-form-label text-right" for="issues-count">
             Quantity:
         </label>
+
         <div class="col">
             <InputNumber @bind-Value="Model.IssuesCount"
                          class="form-control" id="issues-count" min="0" max="100" />
         </div>
+
     </div>
 
     <div class="form-group row">
+
         <label class="col col-form-label text-right" for="description">
             Description source:
         </label>
+
         <div class="col">
             <InputSelect @bind-Value="Model.TextSourceId"
                          class="form-control" id="description">
@@ -25,28 +30,35 @@
 
             </InputSelect>
         </div>
+
     </div>
 
     <div class="form-group row">
+
         <label class="col col-form-label text-right">
             Limit words number:
         </label>
+
         <div class="col input-group align-items-center">
             <InputCheckbox @bind-Value="Model.LimitWordsCount"
                            class="input-group-prepend mx-2" />
             <InputNumber @bind-Value="Model.MaxWordsCount"
                          class="form-control" min="0" max="1000" disabled="@(!Model.LimitWordsCount)" />
         </div>
+
     </div>
 
     <div class="form-group row align-items-center">
+
         <label class="col col-form-label text-right" for="randomize-words-count">
             Randomize words number:
         </label>
+
         <div class="col">
             <InputCheckbox @bind-Value="Model.RandomizeWordsCount"
                            class="mx-2" id="randomize-words-count" />
         </div>
+
     </div>
 
     <div class="col text-center">
@@ -59,9 +71,9 @@
 
 @code {
     [Parameter]
-    public IssueGenerationModel Model { get; set; } = new();
+    public IssueGenerationViewModel Model { get; set; } = new();
     [Parameter]
-    public EventCallback<IssueGenerationModel> ModelChanged { get; set; }
+    public EventCallback<IssueGenerationViewModel> ModelChanged { get; set; }
     [Parameter]
     public bool Processing { get; set; }
     [Parameter]

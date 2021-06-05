@@ -5,6 +5,6 @@ namespace EmployerWebApp.Services
 {
     public interface IIssueService
     {
-        Task GenerateIssuesAsync(IssueGenerationModel issueGeneration);
+        Task GenerateIssuesAsync(IssueGenerationViewModel issueGeneration);
     }
 }

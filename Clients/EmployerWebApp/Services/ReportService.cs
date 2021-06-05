@@ -20,9 +20,9 @@ namespace EmployerWebApp.Services
             this.logger = logger;
         }
 
-        public async Task<List<IssueModel>> GetLastIssuesAsync()
+        public async Task<List<IssueViewModel>> GetLastIssuesAsync()
         {
-            var response = await client.GetFromJsonAsync<List<IssueModel>>("/api/issues", new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var response = await client.GetFromJsonAsync<List<IssueViewModel>>("/api/issues", new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             return response;
         }
     }

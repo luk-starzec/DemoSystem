@@ -2,7 +2,7 @@
 
 namespace EmployerWebApp.Models
 {
-    public class DescriptionSource
+    public class DescriptionSourceViewModel
     {
         public int Id { get; set; }
         [Required]

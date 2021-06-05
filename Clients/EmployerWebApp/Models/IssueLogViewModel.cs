@@ -2,7 +2,7 @@
 
 namespace EmployerWebApp.Models
 {
-    public class EventLogModel
+    public class IssueLogViewModel
     {
         public DateTimeOffset Date { get; set; }
         public string Description { get; set; }

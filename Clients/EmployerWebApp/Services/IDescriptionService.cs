@@ -7,8 +7,8 @@ namespace EmployerWebApp.Services
     public interface IDescriptionService
     {
         Task<List<(string name, int id)>> GetDescriptionSourceNamesAsync();
-        Task<List<DescriptionSource>> GetDescriptionSourcesAsync();
-        Task<DescriptionSource> AddDescriptionSourceAsync(DescriptionSource descriptionSource);
+        Task<List<DescriptionSourceViewModel>> GetDescriptionSourcesAsync();
+        Task<DescriptionSourceViewModel> AddDescriptionSourceAsync(DescriptionSourceViewModel descriptionSource);
         Task DeleteDescriptionSourceAsync(int id);
     }
 }

@@ -6,6 +6,6 @@ namespace EmployerWebApp.Services
 {
     public interface IReportService
     {
-        Task<List<IssueModel>> GetLastIssuesAsync();
+        Task<List<IssueViewModel>> GetLastIssuesAsync();
     }
 }

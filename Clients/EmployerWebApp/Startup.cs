@@ -1,4 +1,3 @@
-using EmployerWebApp.Data;
 using EmployerWebApp.Helpers;
 using EmployerWebApp.Models;
 using EmployerWebApp.Services;
@@ -41,8 +40,6 @@ namespace EmployerWebApp
             services.AddTransient<IDescriptionService, DescriptionService>();
             services.AddTransient<IPriorityService, PriorityService>();
             services.AddTransient<IReportService, ReportService>();
-
-            services.AddSingleton<WeatherForecastService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

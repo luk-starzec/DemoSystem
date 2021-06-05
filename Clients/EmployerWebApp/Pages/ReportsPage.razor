@@ -8,9 +8,7 @@
 
     @if (issues is null)
     {
-        <div class="alert alert-primary">
-            Loading data...
-        </div>
+        <LoadingPanel />
     }
     else
     {
@@ -52,7 +50,7 @@
 </main>
 
 @code {
-    private List<IssueModel> issues;
+    private List<IssueViewModel> issues;
 
     bool isPolling = true;
     string textPollingButton => isPolling ? "Stop polling" : "Start polling";

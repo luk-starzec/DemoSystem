@@ -15,7 +15,7 @@
     {
         @foreach (var descriptionSource in descriptionSources)
         {
-            <DescriptionSourceItem DescriptionSource="@descriptionSource" OnDescriptionSourceDeleted="DescriptionSourceDeleted" />
+            <DescriptionSourceItem DescriptionSource="descriptionSource" OnDescriptionSourceDeleted="DescriptionSourceDeleted" />
         }
         <DescriptionSourceNewItem OnDescriptionSourceAdded="DescriptionSourceAdded" />
     }
@@ -23,14 +23,14 @@
 </main>
 
 @code {
-    private List<DescriptionSource> descriptionSources;
+    private List<DescriptionSourceViewModel> descriptionSources;
 
     protected override async Task OnInitializedAsync()
     {
         descriptionSources = await descriptionService.GetDescriptionSourcesAsync();
     }
 
-    private void DescriptionSourceAdded(DescriptionSource descriptionSource)
+    private void DescriptionSourceAdded(DescriptionSourceViewModel descriptionSource)
     {
         descriptionSources.Add(descriptionSource);
     }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="debug.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,10 @@
     <ProjectReference Include="..\..\EventBus\BasicIntegrationEventService\BasicIntegrationEventService.csproj" />
     <ProjectReference Include="..\..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
     <ProjectReference Include="..\..\EventBus\EventBus\EventBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="debug.ico" />
   </ItemGroup>
 
 </Project>

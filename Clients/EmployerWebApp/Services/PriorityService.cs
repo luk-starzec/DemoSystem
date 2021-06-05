@@ -17,17 +17,17 @@ namespace EmployerWebApp.Services
             this.clientFactory = clientFactory;
         }
 
-        public async Task<List<PriorityModel>> GetTitlePrioritiesAsync()
+        public async Task<List<PriorityViewModel>> GetTitlePrioritiesAsync()
         {
             var client = GetPrioritySetterClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<TitlePriorityModel>>("/api/title");
+            var response = await client.GetFromJsonAsync<IEnumerable<TitlePriorityApiModel>>("/api/title");
             return response.Select(r => r.ToPriorityModel()).ToList();
         }
 
-        public async Task<List<PriorityModel>> GetAppPrioritiesAsync()
+        public async Task<List<PriorityViewModel>> GetAppPrioritiesAsync()
         {
             var client = GetPrioritySetterClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<AppPriorityModel>>("/api/app");
+            var response = await client.GetFromJsonAsync<IEnumerable<AppPriorityApiModel>>("/api/app");
             return response.Select(r => r.ToPriorityModel()).ToList();
         }
 
@@ -45,52 +45,50 @@ namespace EmployerWebApp.Services
             return response.ToList();
         }
 
-        public async Task AddTitlePriorityAsync(PriorityModel priorityModel)
+        public async Task AddTitlePriorityAsync(PriorityViewModel priorityModel)
         {
-            var model = new TitlePriorityModel
+            var model = new TitlePriorityApiModel
             {
                 Title = priorityModel.Name,
-                PriorityLevelId = (int)priorityModel.Priority,
+                PriorityLevelId = (int)priorityModel.PriorityLevel,
             };
-
             var client = GetPrioritySetterClient();
             await client.PostAsJsonAsync("/api/title", model);
         }
 
-        public async Task SaveTitlePriorityAsync(PriorityModel priorityModel)
+        public async Task SaveTitlePriorityAsync(PriorityViewModel viewModel)
         {
             var client = GetPrioritySetterClient();
-            await client.PutAsJsonAsync($"/api/title/{priorityModel.Name}", priorityModel.Priority);
+            await client.PutAsJsonAsync($"/api/title/{viewModel.Name}", viewModel.PriorityLevel);
         }
 
-        public async Task DeleteTitlePriorityAsync(PriorityModel priorityModel)
+        public async Task DeleteTitlePriorityAsync(PriorityViewModel viewModel)
         {
             var client = GetPrioritySetterClient();
-            await client.DeleteAsync($"/api/title/{priorityModel.Name}");
+            await client.DeleteAsync($"/api/title/{viewModel.Name}");
         }
 
-        public async Task AddAppPriorityAsync(PriorityModel priorityModel)
+        public async Task AddAppPriorityAsync(PriorityViewModel viewModel)
         {
-            var model = new AppPriorityModel
+            var model = new AppPriorityApiModel
             {
-                App = priorityModel.Name,
-                PriorityLevelId = (int)priorityModel.Priority,
+                App = viewModel.Name,
+                PriorityLevelId = (int)viewModel.PriorityLevel,
             };
-
             var client = GetPrioritySetterClient();
             await client.PostAsJsonAsync("/api/app", model);
         }
 
-        public async Task SaveAppPriorityAsync(PriorityModel priorityModel)
+        public async Task SaveAppPriorityAsync(PriorityViewModel viewModel)
         {
             var client = GetPrioritySetterClient();
-            await client.PutAsJsonAsync($"/api/app/{priorityModel.Name}", priorityModel.Priority);
+            await client.PutAsJsonAsync($"/api/app/{viewModel.Name}", viewModel.PriorityLevel);
         }
 
-        public async Task DeleteAppPriorityAsync(PriorityModel priorityModel)
+        public async Task DeleteAppPriorityAsync(PriorityViewModel viewModel)
         {
             var client = GetPrioritySetterClient();
-            await client.DeleteAsync($"/api/app/{priorityModel.Name}");
+            await client.DeleteAsync($"/api/app/{viewModel.Name}");
         }
 
         private HttpClient GetPrioritySetterClient() 

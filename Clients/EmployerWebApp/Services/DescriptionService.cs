@@ -32,7 +32,7 @@ namespace EmployerWebApp.Services
             return list;
         }
 
-        public async Task<List<DescriptionSource>> GetDescriptionSourcesAsync()
+        public async Task<List<DescriptionSourceViewModel>> GetDescriptionSourcesAsync()
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -44,7 +44,7 @@ namespace EmployerWebApp.Services
                 .ToList();
         }
 
-        public async Task<DescriptionSource> AddDescriptionSourceAsync(DescriptionSource descriptionSource)
+        public async Task<DescriptionSourceViewModel> AddDescriptionSourceAsync(DescriptionSourceViewModel descriptionSource)
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -68,7 +68,7 @@ namespace EmployerWebApp.Services
             var reply = await client.DeleteTextSourceAsync(request);
         }
 
-        private DescriptionSource TextSourceReply2DescriptionSource(TextSourceReply textSourceReply)
+        private DescriptionSourceViewModel TextSourceReply2DescriptionSource(TextSourceReply textSourceReply)
             => new()
             {
                 Id = textSourceReply.Id,

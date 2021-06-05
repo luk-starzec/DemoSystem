@@ -1,0 +1,17 @@
+﻿
+<span class="btn @css">@text</span>
+
+@code {
+    [Parameter]
+    public EnumPriorityLevel PriorityLevel { get; set; }
+
+    string text => PriorityLevel.ToString();
+
+    string css => PriorityLevel switch
+    {
+        EnumPriorityLevel.High => "alert-danger",
+        EnumPriorityLevel.Normal => "alert-primary",
+        _ => "alert-secondary"
+    };
+
+}

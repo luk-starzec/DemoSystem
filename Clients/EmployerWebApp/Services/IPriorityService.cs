@@ -6,15 +6,15 @@ namespace EmployerWebApp.Services
 {
     public interface IPriorityService
     {
-        Task<List<PriorityModel>> GetTitlePrioritiesAsync();
-        Task AddTitlePriorityAsync(PriorityModel priorityModel);
-        Task SaveTitlePriorityAsync(PriorityModel priorityModel);
-        Task DeleteTitlePriorityAsync(PriorityModel priorityModel);
+        Task<List<PriorityViewModel>> GetTitlePrioritiesAsync();
+        Task AddTitlePriorityAsync(PriorityViewModel viewModel);
+        Task SaveTitlePriorityAsync(PriorityViewModel viewModel);
+        Task DeleteTitlePriorityAsync(PriorityViewModel viewModel);
 
-        Task<List<PriorityModel>> GetAppPrioritiesAsync();
-        Task AddAppPriorityAsync(PriorityModel priorityModel);
-        Task SaveAppPriorityAsync(PriorityModel priorityModel);
-        Task DeleteAppPriorityAsync(PriorityModel priorityModel);
+        Task<List<PriorityViewModel>> GetAppPrioritiesAsync();
+        Task AddAppPriorityAsync(PriorityViewModel viewModel);
+        Task SaveAppPriorityAsync(PriorityViewModel viewModel);
+        Task DeleteAppPriorityAsync(PriorityViewModel viewModel);
 
         Task<List<string>> GetTitlesAsync();
         Task<List<string>> GetAppsAsync();

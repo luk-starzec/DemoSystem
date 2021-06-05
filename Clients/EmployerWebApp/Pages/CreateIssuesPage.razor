@@ -12,7 +12,7 @@
 @code {
     bool processing = false;
 
-    private async Task Generate(IssueGenerationModel model)
+    private async Task Generate(IssueGenerationViewModel model)
     {
         processing = true;
         await issueService.GenerateIssuesAsync(model);

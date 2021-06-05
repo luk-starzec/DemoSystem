@@ -11,7 +11,7 @@
         </td>
 
         <td class="text-center">
-            <PriorityEditCell @bind-Priority="model.Priority" />
+            <PriorityLevelEditCell @bind-PriorityLevel="model.PriorityLevel" />
         </td>
 
         <td class="text-center">
@@ -37,9 +37,9 @@
     [Parameter]
     public List<string> Names { get; set; } = new List<string>();
     [Parameter]
-    public EventCallback<PriorityModel> OnAdd { get; set; }
+    public EventCallback<PriorityViewModel> OnAdd { get; set; }
 
-    PriorityModel model;
+    PriorityViewModel model;
 
     bool showDetails = false;
     bool showError = false;
@@ -74,7 +74,7 @@
         model = new()
         {
             Name = null,
-            Priority = EnumPriority.Normal,
+            PriorityLevel = EnumPriorityLevel.Normal,
         };
 
 }

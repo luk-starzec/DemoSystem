@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmployerWebApp.Models
 {
-    public class IssueGenerationModel
+    public class IssueGenerationViewModel
     {
         [Range(0, 100)]
         public int IssuesCount { get; set; }

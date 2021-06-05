@@ -17,15 +17,15 @@
 
                 <tr>
                     <th>
-                        <NameFilter @bind-Text="searchText" />
+                        <FilterName @bind-Text="searchText" />
                     </th>
 
                     <th>
-                        <PriorityFilter @bind-Low="isLow" @bind-Normal="isNormal" @bind-High="isHigh" />
+                        <FilterPriorityLevel @bind-Low="isLow" @bind-Normal="isNormal" @bind-High="isHigh" />
                     </th>
 
                     <th style="width: 15em;">
-                        <button class="btn btn-dark form-control" @onclick="EditButtonClick">
+                        <button class="btn btn-dark form-control" @onclick="() => edit = !edit">
                             @if (edit)
                             {
                                 <span class="oi oi-eye mr-2"></span>
@@ -49,17 +49,17 @@
                 {
                     if (edit)
                     {
-                        <PriorityModelEditRow Model="@item" OnSave="SaveItem" OnDelete="DeleteItem" />
+                        <PriorityItemEditRow Model="@item" OnSave="SaveItem" OnDelete="DeleteItem" />
                     }
                     else
                     {
-                        <PriorityModelRow Model="@item" />
+                        <PriorityItemRow Model="@item" />
                     }
                 }
 
                 @if (edit)
                 {
-                    <PriorityModelNewRow Names="@availableNames" OnAdd="AddItem" />
+                    <PriorityItemNewRow Names="@availableNames" OnAdd="AddItem" />
                 }
 
             </tbody>
@@ -74,16 +74,16 @@
     [Parameter]
     public string HeaderText { get; set; }
     [Parameter]
-    public List<PriorityModel> Items { get; set; }
+    public List<PriorityViewModel> Items { get; set; }
     [Parameter]
     public List<string> Names { get; set; }
 
     [Parameter]
-    public EventCallback<PriorityModel> OnAdd { get; set; }
+    public EventCallback<PriorityViewModel> OnAdd { get; set; }
     [Parameter]
-    public EventCallback<PriorityModel> OnSave { get; set; }
+    public EventCallback<PriorityViewModel> OnSave { get; set; }
     [Parameter]
-    public EventCallback<PriorityModel> OnDelete { get; set; }
+    public EventCallback<PriorityViewModel> OnDelete { get; set; }
 
     string searchText = "";
 
@@ -91,50 +91,41 @@
     bool isNormal = true;
     bool isHigh = true;
 
-    IEnumerable<PriorityModel> filteredItems => Items.Where(r => IsMatchingItem(r)).OrderBy(r => r.Name);
+    IEnumerable<PriorityViewModel> filteredItems => Items.Where(r => IsMatchingItem(r)).OrderBy(r => r.Name);
+
+    List<string> availableNames => Names.Where(r => !isNameUsed(r)).OrderBy(r => r).ToList();
 
     bool edit;
     bool processing;
 
-    List<string> availableNames => Names.Where(r => !isNameUsed(r)).OrderBy(r => r).ToList();
 
-    bool isNameUsed(string name) => Items.Any(r => r.Name == name);
-
-    void EditButtonClick() => edit = !edit;
-
-
-    async Task AddItem(PriorityModel model)
+    async Task InvokeAction(EventCallback<PriorityViewModel> action, PriorityViewModel viewModel)
     {
         processing = true;
-        await OnAdd.InvokeAsync(model);
-        processing = false;
-    }
-    async Task SaveItem(PriorityModel model)
-    {
-        processing = true;
-        await OnSave.InvokeAsync(model);
+        await action.InvokeAsync(viewModel);
         processing = false;
     }
 
-    async Task DeleteItem(PriorityModel model)
-    {
-        processing = true;
-        await OnDelete.InvokeAsync(model);
-        processing = false;
-    }
+    async Task AddItem(PriorityViewModel item) => await InvokeAction(OnAdd, item);
 
-    bool IsMatchingItem(PriorityModel item)
+    async Task SaveItem(PriorityViewModel item) => await InvokeAction(OnSave, item);
+
+    async Task DeleteItem(PriorityViewModel item) => await InvokeAction(OnDelete, item);
+
+    bool IsMatchingItem(PriorityViewModel item)
     {
         if (!string.IsNullOrWhiteSpace(searchText) && !item.Name.ToLower().Contains(searchText.ToLower()))
             return false;
 
-        if (item.Priority == EnumPriority.Low && !isLow)
+        if (item.PriorityLevel == EnumPriorityLevel.Low && !isLow)
             return false;
-        if (item.Priority == EnumPriority.Normal && !isNormal)
+        if (item.PriorityLevel == EnumPriorityLevel.Normal && !isNormal)
             return false;
-        if (item.Priority == EnumPriority.High && !isHigh)
+        if (item.PriorityLevel == EnumPriorityLevel.High && !isHigh)
             return false;
 
         return true;
     }
+
+    bool isNameUsed(string name) => Items.Any(r => r.Name == name);
 }

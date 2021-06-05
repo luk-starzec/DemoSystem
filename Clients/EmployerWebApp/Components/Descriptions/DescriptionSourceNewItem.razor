@@ -34,9 +34,9 @@
 
 @code {
     [Parameter]
-    public EventCallback<DescriptionSource> OnDescriptionSourceAdded { get; set; }
+    public EventCallback<DescriptionSourceViewModel> OnDescriptionSourceAdded { get; set; }
 
-    private DescriptionSource model = new();
+    private DescriptionSourceViewModel model = new();
 
     bool disableButton = false;
     string buttonText => disableButton ? "Wait..." : "Add";

@@ -2,8 +2,7 @@
 using EmployerWebApp.Models;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace EmployerWebApp.Services
@@ -19,7 +18,7 @@ namespace EmployerWebApp.Services
             this.logger = logger;
         }
 
-        public async Task GenerateIssuesAsync(IssueGenerationModel issueGeneration)
+        public async Task GenerateIssuesAsync(IssueGenerationViewModel issueGeneration)
         {
             var model = new
             {
@@ -28,10 +27,7 @@ namespace EmployerWebApp.Services
                 RandomWordsCount = issueGeneration.RandomizeWordsCount,
                 TextSourceId = issueGeneration.TextSourceId > 0 ? issueGeneration.TextSourceId : (int?)null,
             };
-            var json = JsonSerializer.Serialize(model);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            await client.PostAsync("/api/issue", content);
+            await client.PostAsJsonAsync("/api/issue", model);
         }
     }
 }

@@ -5,7 +5,7 @@
     </td>
 
     <td class="text-center">
-        <PriorityEditCell @bind-Priority="Model.Priority" />
+        <PriorityLevelEditCell @bind-PriorityLevel="Model.PriorityLevel" />
     </td>
 
     <td>
@@ -25,20 +25,14 @@
 
 @code {
     [Parameter]
-    public PriorityModel Model { get; set; }
+    public PriorityViewModel Model { get; set; }
     [Parameter]
-    public EventCallback<PriorityModel> OnSave { get; set; }
+    public EventCallback<PriorityViewModel> OnSave { get; set; }
     [Parameter]
-    public EventCallback<PriorityModel> OnDelete { get; set; }
+    public EventCallback<PriorityViewModel> OnDelete { get; set; }
 
-    async Task Save()
-    {
-        await OnSave.InvokeAsync(Model);
-    }
+    async Task Save() => await OnSave.InvokeAsync(Model);
 
-    async Task Delete()
-    {
-        await OnDelete.InvokeAsync(Model);
-    }
+    async Task Delete() => await OnDelete.InvokeAsync(Model);
 
 }

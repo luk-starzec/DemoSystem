@@ -1,11 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
+﻿using System.ComponentModel;
 
 namespace EmployerWebApp.Models
 {
-    public enum EnumPriority
+    public enum EnumPriorityLevel
     {
         [Description("")]
         None,

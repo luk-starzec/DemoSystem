@@ -1,10 +1,9 @@
-﻿using EmployerWebApp.Helpers;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace EmployerWebApp.Models
 {
-    public class IssueModel
+    public class IssueViewModel
     {
         public Guid Id { get; set; }
         public DateTimeOffset Created { get; set; }
@@ -14,13 +13,12 @@ namespace EmployerWebApp.Models
         public string Sender { get; set; }
         public string Priority { get; set; }
         public string Employee { get; set; }
-        public EventLogModel[] Logs { get; set; }
+        public IssueLogViewModel[] Logs { get; set; }
 
         public bool DetailsVisible { get; set; }
 
-        public EventLogModel[] SortedLogs => Logs.OrderByDescending(r => r.Date).ToArray();
+        public IssueLogViewModel[] SortedLogs => Logs.OrderByDescending(r => r.Date).ToArray();
 
-        //public string PriorityText => Priority.GetDescription();
-        public EnumPriority PriorityEnum => Priority is null ? EnumPriority.None : (EnumPriority)Enum.Parse(typeof(EnumPriority), Priority);
+        public EnumPriorityLevel PriorityLevel => Priority is null ? EnumPriorityLevel.None : (EnumPriorityLevel)Enum.Parse(typeof(EnumPriorityLevel), Priority);
     }
 }

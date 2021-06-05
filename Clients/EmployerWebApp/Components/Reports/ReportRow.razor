@@ -30,18 +30,18 @@
 
 @code {
     [Parameter]
-    public IssueModel Issue { get; set; }
+    public IssueViewModel Issue { get; set; }
     [Parameter]
-    public EventCallback<IssueModel> IssueChanged { get; set; }
+    public EventCallback<IssueViewModel> IssueChanged { get; set; }
 
     string textDetailsButton => Issue.DetailsVisible ? "less" : "more";
 
     string cssRow => Issue.DetailsVisible ? "font-weight-bold selected-row" : "";
 
-    string cssPriority => Issue.PriorityEnum switch
+    string cssPriority => Issue.PriorityLevel switch
     {
-        EnumPriority.High => "alert-danger",
-        EnumPriority.Normal => "alert-primary",
+        EnumPriorityLevel.High => "alert-danger",
+        EnumPriorityLevel.Normal => "alert-primary",
         _ => "alert-secondary"
     };
 

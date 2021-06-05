@@ -4,39 +4,39 @@ namespace EmployerWebApp.Helpers
 {
     public static class PriorityModelExtensions
     {
-        public static PriorityModel ToPriorityModel(this TitlePriorityModel errorPriority)
+        public static PriorityViewModel ToPriorityModel(this TitlePriorityApiModel errorPriority)
         {
-            return new PriorityModel
+            return new PriorityViewModel
             {
                 Name = errorPriority.Title,
-                Priority = (EnumPriority)errorPriority.PriorityLevelId,
+                PriorityLevel = (EnumPriorityLevel)errorPriority.PriorityLevelId,
             };
         }
 
-        public static TitlePriorityModel ToErrorPriorityModel(this PriorityModel priority)
+        public static TitlePriorityApiModel ToErrorPriorityModel(this PriorityViewModel priority)
         {
-            return new TitlePriorityModel
+            return new TitlePriorityApiModel
             {
                 Title = priority.Name,
-                PriorityLevelId = (int)priority.Priority,
+                PriorityLevelId = (int)priority.PriorityLevel,
             };
         }
 
-        public static PriorityModel ToPriorityModel(this AppPriorityModel appPriority)
+        public static PriorityViewModel ToPriorityModel(this AppPriorityApiModel appPriority)
         {
-            return new PriorityModel
+            return new PriorityViewModel
             {
                 Name = appPriority.App,
-                Priority = (EnumPriority)appPriority.PriorityLevelId,
+                PriorityLevel = (EnumPriorityLevel)appPriority.PriorityLevelId,
             };
         }
 
-        public static AppPriorityModel ToAppPriorityModel(this PriorityModel priority)
+        public static AppPriorityApiModel ToAppPriorityModel(this PriorityViewModel priority)
         {
-            return new AppPriorityModel
+            return new AppPriorityApiModel
             {
                 App = priority.Name,
-                PriorityLevelId = (int)priority.Priority,
+                PriorityLevelId = (int)priority.PriorityLevel,
             };
         }
     }

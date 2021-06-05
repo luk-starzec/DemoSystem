@@ -1,0 +1,16 @@
+﻿
+@if (Visible)
+{
+    <div class="alert alert-primary">
+        Loading data...
+    </div>
+
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; } = true;
+    [Parameter]
+    public string Text { get; set; } = "Loading data...";
+
+}

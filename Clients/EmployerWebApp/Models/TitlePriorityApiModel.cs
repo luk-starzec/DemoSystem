@@ -1,8 +1,8 @@
 ﻿namespace EmployerWebApp.Models
 {
-    public class AppPriorityModel
+    public class TitlePriorityApiModel
     {
-        public string App { get; set; }
+        public string Title { get; set; }
         public int PriorityLevelId { get; set; }
     }
 }

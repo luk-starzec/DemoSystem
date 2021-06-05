@@ -2,13 +2,10 @@
 
 @if (descriptionSources is null)
 {
-    <div class="alert alert-primary">
-        Loading data...
-    </div>
+    <LoadingPanel />
 }
 else
 {
-
     <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
 
@@ -25,10 +22,10 @@ else
     [Parameter]
     public bool Processing { get; set; }
     [Parameter]
-    public EventCallback<IssueGenerationModel> OnValidSubmit { get; set; }
+    public EventCallback<IssueGenerationViewModel> OnValidSubmit { get; set; }
 
     private List<(string name, int id)> descriptionSources;
-    private IssueGenerationModel model = new();
+    private IssueGenerationViewModel model = new();
 
     string buttonText => Processing ? "Please wait..." : "Generate issues";
 

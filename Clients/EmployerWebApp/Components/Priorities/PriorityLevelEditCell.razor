@@ -1,0 +1,33 @@
+﻿
+<div>
+    <button class="btn @cssLow" @onclick="()=>SetPriorityLevel(EnumPriorityLevel.Low)">
+        Low
+    </button>
+
+    <button class="btn @cssNormal" @onclick="()=>SetPriorityLevel(EnumPriorityLevel.Normal)">
+        Normal
+    </button>
+
+    <button class="btn @cssHigh" @onclick="()=>SetPriorityLevel(EnumPriorityLevel.High)">
+        High
+    </button>
+
+</div>
+
+@code {
+    [Parameter]
+    public EnumPriorityLevel PriorityLevel { get; set; }
+    [Parameter]
+    public EventCallback<EnumPriorityLevel> PriorityLevelChanged { get; set; }
+
+    string cssLow => PriorityLevel == EnumPriorityLevel.Low ? "alert-secondary" : "btn-sm btn-outline-secondary";
+    string cssNormal => PriorityLevel == EnumPriorityLevel.Normal ? "alert-primary" : "btn-sm btn-outline-secondary";
+    string cssHigh => PriorityLevel == EnumPriorityLevel.High ? "alert-danger" : "btn-sm btn-outline-secondary";
+
+    async Task SetPriorityLevel(EnumPriorityLevel priority)
+    {
+        PriorityLevel = priority;
+        await PriorityLevelChanged.InvokeAsync(priority);
+    }
+}
+
