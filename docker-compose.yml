@@ -108,3 +108,40 @@ services:
     ports:
       - "7001:80"
 
+
+  employerwebapp:
+    image: ${DOCKER_REGISTRY-}employerwebapp
+    build:
+      context: .
+      dockerfile: Clients/EmployerWebApp/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "5005:80"
+
+
+  employeeconsoleapp:
+    image: ${DOCKER_REGISTRY-}employeeconsoleapp
+    build:
+      context: .
+      dockerfile: Clients/EmployeeConsoleApp/Dockerfile
+    environment:
+      - EventBusRabbitMQSettings__Connection=amqp://guest:guest@demo-rabbit:5672
+      - EventBusRabbitMQSettings__RetryCount=5
+      - EventBusRabbitMQSettings__SubscriptionClientName=employee
+      - ApplicationSettings__UserName=HALL 9000
+      - ApplicationSettings__WordsPerSecond=5
+
+  employeeconsoleapp2:
+    image: ${DOCKER_REGISTRY-}employeeconsoleapp
+    build:
+      context: .
+      dockerfile: Clients/EmployeeConsoleApp/Dockerfile
+    environment:
+      - EventBusRabbitMQSettings__Connection=amqp://guest:guest@demo-rabbit:5672
+      - EventBusRabbitMQSettings__RetryCount=5
+      - EventBusRabbitMQSettings__SubscriptionClientName=employee
+      - ApplicationSettings__UserName=T-1000
+      - ApplicationSettings__WordsPerSecond=5
+
+

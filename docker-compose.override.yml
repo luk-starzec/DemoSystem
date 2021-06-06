@@ -42,3 +42,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
 
+
+  employerwebapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
+
+  employeeconsoleapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
