@@ -1,14 +1,19 @@
-﻿{
+{
   "profiles": {
     "DescriptionProvider": {
       "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "launchBrowser": false,
       "launchUrl": "healthz",
-      "applicationUrl": "http://localhost:6030;https://localhost:6031",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://localhost:6030;https://localhost:6031"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/healthz",
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

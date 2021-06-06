@@ -1,0 +1,9 @@
+﻿
+summary::before {
+    content: '\25B6';
+    padding-right: .5em;
+}
+
+details[open] summary::before {
+    content: '\25BC';
+}

@@ -61,7 +61,7 @@ namespace PrioritySetter
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Compose"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

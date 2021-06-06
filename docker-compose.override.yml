@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  descriptionprovider:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+
+  headerprovider:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+
+  jobtitlefirstpartprovider:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+
+  senderprovider:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+
+  issuegenerator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
+
+  prioritysetter:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
+
+  reportservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+
+
+  healthmonitoring:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+

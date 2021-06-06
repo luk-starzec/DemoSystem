@@ -1,0 +1,110 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: "demo-rabbit"
+    expose:
+      - 5672
+      - 15672
+    ports:
+      - 5672:5672
+      - 8080:15672
+    #healthcheck:
+    #  test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+    #  interval: 5s
+    #  timeout: 15s
+    #  retries: 1
+
+  descriptionprovider:
+    image: ${DOCKER_REGISTRY-}descriptionprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/DescriptionProvider/Dockerfile
+    environment:
+      - GRPC_PORT=81
+      - PORT=80
+    expose:
+      - 80
+      - 81
+    ports:
+      - 6035:80
+      - 6030:81
+
+  headerprovider:
+    image: ${DOCKER_REGISTRY-}headerprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/HeaderProvider/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6020:80"
+
+
+  jobtitlefirstpartprovider:
+    image: ${DOCKER_REGISTRY-}jobtitlefirstpartprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/JobTitleFirstPartProvider/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6011:80"
+
+
+  senderprovider:
+    image: ${DOCKER_REGISTRY-}senderprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/SenderProvider/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6010:80"
+
+
+  issuegenerator:
+    image: ${DOCKER_REGISTRY-}issuegenerator
+    build:
+      context: .
+      dockerfile: IssueGenerator/IssueGenerator/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6001:80"
+
+
+  prioritysetter:
+    image: ${DOCKER_REGISTRY-}prioritysetter
+    build:
+      context: .
+      dockerfile: PrioritySetter/PrioritySetter/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6100:80"
+
+
+  reportservice:
+    image: ${DOCKER_REGISTRY-}reportservice
+    build:
+      context: .
+      dockerfile: ReportService/ReportService/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "6500:80"
+
+
+  healthmonitoring:
+    image: ${DOCKER_REGISTRY-}healthmonitoring
+    build:
+      context: .
+      dockerfile: HealthMonitoring/Dockerfile
+    expose:
+      - "80"
+    ports:
+      - "7001:80"
+
