@@ -1,5 +1,7 @@
-﻿<tr>
-    @if (showDetails)
+﻿@inject IJSRuntime js
+
+<tr id="newRowId">
+    @if (detailsVisible)
     {
         <td>
             <select @bind="model.Name" class="form-control @cssName" @onclick="CheckName">
@@ -38,29 +40,50 @@
     public List<string> Names { get; set; } = new List<string>();
     [Parameter]
     public EventCallback<PriorityViewModel> OnAdd { get; set; }
+    [Parameter]
+    public bool DetailsVisible
+    {
+        get => detailsVisible;
+        set
+        {
+            if (value == detailsVisible)
+                return;
+            detailsVisible = value;
+            InvokeAsync(ScrollTo);
+        }
+    }
 
     PriorityViewModel model;
 
-    bool showDetails = false;
-    bool showError = false;
+    bool detailsVisible = false;
+    bool errorVisible = false;
 
-    string cssName => showError ? "invalid" : "";
+    string cssName => errorVisible ? "invalid" : "";
+
 
     protected override void OnInitialized()
     {
         SetEmptyModel();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && DetailsVisible)
+            await ScrollTo();
+    }
+
     void ShowDetails()
     {
         SetEmptyModel();
-        showDetails = true;
+        detailsVisible = true;
     }
+
+    public async Task ScrollTo() => await js.InvokeVoidAsync("scrollToElementId", "newRowId");
 
     async Task Add()
     {
         CheckName();
-        if (showError)
+        if (errorVisible)
             return;
 
         await OnAdd.InvokeAsync(model);
@@ -68,7 +91,7 @@
         SetEmptyModel();
     }
 
-    void CheckName() => showError = string.IsNullOrEmpty(model.Name);
+    void CheckName() => errorVisible = string.IsNullOrEmpty(model.Name);
 
     void SetEmptyModel() =>
         model = new()
