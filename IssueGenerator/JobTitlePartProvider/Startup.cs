@@ -1,5 +1,5 @@
 using HealthChecks.UI.Client;
-using JobTitleFirstPartProvider.Data;
+using JobTitlePartProvider.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -14,8 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using TracingHelper;
 
-namespace JobTitleFirstPartProvider
+namespace JobTitlePartProvider
 {
     public class Startup
     {
@@ -28,7 +29,9 @@ namespace JobTitleFirstPartProvider
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDataService, DataService>();
+            if (!int.TryParse(Environment.GetEnvironmentVariable("JOB_TITLE_PART"), out var fileIndex))
+                fileIndex = 1;
+            services.AddSingleton<IDataService, DataService>(sp => new DataService(sp.GetService<IWebHostEnvironment>(), fileIndex));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -37,6 +40,8 @@ namespace JobTitleFirstPartProvider
             });
 
             services.AddHealthChecks();
+
+            services.AddZipkinTracing($"TitleProvider{fileIndex}");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

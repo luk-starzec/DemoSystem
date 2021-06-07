@@ -1,5 +1,5 @@
 ﻿
-namespace JobTitleFirstPartProvider.Data
+namespace JobTitlePartProvider.Data
 {
     public interface IDataService
     {

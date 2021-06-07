@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DescriptionProvider", "Issu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HeaderProvider", "IssueGenerator\HeaderProvider\HeaderProvider.csproj", "{A4A2349C-A32D-41DE-844B-338A440A2D3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTitleFirstPartProvider", "IssueGenerator\JobTitleFirstPartProvider\JobTitleFirstPartProvider.csproj", "{A3BF0C05-B63B-4C2A-B4C2-1C6D6D228FA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTitlePartProvider", "IssueGenerator\JobTitlePartProvider\JobTitlePartProvider.csproj", "{A3BF0C05-B63B-4C2A-B4C2-1C6D6D228FA7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SenderProvider", "IssueGenerator\SenderProvider\SenderProvider.csproj", "{C1F5D95E-2C9E-486E-82A2-7BE27C305AC4}"
 EndProject
@@ -46,6 +46,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsoleApp", "Clients\EmployeeConsoleApp\EmployeeConsoleApp.csproj", "{25AEC05F-754F-49A1-BB67-3FFF786A069C}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3E81EE1D-30D2-4EB5-A4E4-F76BDF1EA0FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracingHelper", "Helpers\TracingHelper\TracingHelper.csproj", "{66ECE594-D7AD-4CA5-89E0-18057EC30D0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{3E81EE1D-30D2-4EB5-A4E4-F76BDF1EA0FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E81EE1D-30D2-4EB5-A4E4-F76BDF1EA0FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E81EE1D-30D2-4EB5-A4E4-F76BDF1EA0FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66ECE594-D7AD-4CA5-89E0-18057EC30D0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ECE594-D7AD-4CA5-89E0-18057EC30D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66ECE594-D7AD-4CA5-89E0-18057EC30D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66ECE594-D7AD-4CA5-89E0-18057EC30D0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{49FB32F1-3D71-4FD9-8D6A-A8D4308B3AD6} = {7E47444D-364F-4F6F-B444-5623D380B018}
 		{54C1E547-685E-4984-A53E-F4862B7CC069} = {7E47444D-364F-4F6F-B444-5623D380B018}
 		{25AEC05F-754F-49A1-BB67-3FFF786A069C} = {7E47444D-364F-4F6F-B444-5623D380B018}
+		{66ECE594-D7AD-4CA5-89E0-18057EC30D0D} = {A03A35F8-5248-450A-8624-8DF9B710D042}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8489D025-AB1A-4A19-B571-5EC78A67FA01}

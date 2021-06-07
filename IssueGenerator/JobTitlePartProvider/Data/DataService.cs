@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 
-namespace JobTitleFirstPartProvider.Data
+namespace JobTitlePartProvider.Data
 {
     public class DataService : IDataService
     {
@@ -11,9 +11,9 @@ namespace JobTitleFirstPartProvider.Data
 
         private Random random = new();
 
-        public DataService(IWebHostEnvironment webHostEnvironment)
+        public DataService(IWebHostEnvironment webHostEnvironment, int fileIndex)
         {
-            InitData(webHostEnvironment.ContentRootPath);
+            InitData(webHostEnvironment.ContentRootPath, fileIndex);
         }
 
         public string[] GetAllData()
@@ -24,13 +24,12 @@ namespace JobTitleFirstPartProvider.Data
         public string GetData()
         {
             int index = random.Next(data.Length);
-
             return data[index];
         }
 
-        private void InitData(string contentRootPath)
+        private void InitData(string contentRootPath, int fileIndex)
         {
-            var path = Path.Combine(contentRootPath, "Data/data.json");
+            var path = Path.Combine(contentRootPath, $"Data/data{fileIndex}.json");
             var json = File.ReadAllText(path);
 
             data = JsonSerializer.Deserialize<string[]>(json);

@@ -2,20 +2,15 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SenderProvider.Models;
 using SenderProvider.Repo;
 using SenderProvider.Services;
 using SenderProvider.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using TracingHelper;
 
 namespace SenderProvider
 {
@@ -50,6 +45,8 @@ namespace SenderProvider
             });
 
             services.AddHealthChecks();
+
+            services.AddZipkinTracing(typeof(Startup).Assembly.GetName().Name);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using HeaderProvider.Services;
+using TracingHelper;
 
 namespace HeaderProvider
 {
@@ -36,6 +37,8 @@ namespace HeaderProvider
             });
 
             services.AddHealthChecks();
+
+            services.AddZipkinTracing(typeof(Startup).Assembly.GetName().Name);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

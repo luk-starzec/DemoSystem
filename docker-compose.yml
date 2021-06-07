@@ -17,6 +17,11 @@ services:
     #  timeout: 15s
     #  retries: 1
 
+  zipkin:
+    image: "openzipkin/zipkin"
+    ports:
+     - "9411:9411"
+
   descriptionprovider:
     image: ${DOCKER_REGISTRY-}descriptionprovider
     build:
@@ -25,6 +30,10 @@ services:
     environment:
       - GRPC_PORT=81
       - PORT=80
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ZIPKIN_HOSTNAME=zipkin
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     expose:
       - 80
       - 81
@@ -37,39 +46,92 @@ services:
     build:
       context: .
       dockerfile: IssueGenerator/HeaderProvider/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:
       - "6020:80"
-
+    depends_on:
+      - rabbitmq
+      - zipkin
 
   jobtitlefirstpartprovider:
-    image: ${DOCKER_REGISTRY-}jobtitlefirstpartprovider
+    image: ${DOCKER_REGISTRY-}jobtitlepartprovider
     build:
       context: .
-      dockerfile: IssueGenerator/JobTitleFirstPartProvider/Dockerfile
+      dockerfile: IssueGenerator/JobTitlePartProvider/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JOB_TITLE_PART=1
+      - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:
       - "6011:80"
+    depends_on:
+      - rabbitmq
+      - zipkin
 
+  jobtitlesecondpartprovider:
+    image: ${DOCKER_REGISTRY-}jobtitlepartprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/JobTitlePartProvider/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JOB_TITLE_PART=2
+      - ZIPKIN_HOSTNAME=zipkin
+    expose:
+      - "80"
+    ports:
+      - "6012:80"
+    depends_on:
+      - rabbitmq
+      - zipkin
+
+  jobtitlethirdpartprovider:
+    image: ${DOCKER_REGISTRY-}jobtitlepartprovider
+    build:
+      context: .
+      dockerfile: IssueGenerator/JobTitlePartProvider/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JOB_TITLE_PART=3
+      - ZIPKIN_HOSTNAME=zipkin
+    expose:
+      - "80"
+    ports:
+      - "6013:80"
+    depends_on:
+      - rabbitmq
+      - zipkin
 
   senderprovider:
     image: ${DOCKER_REGISTRY-}senderprovider
     build:
       context: .
       dockerfile: IssueGenerator/SenderProvider/Dockerfile
+    environment:
+     - ASPNETCORE_ENVIRONMENT=Compose
+     - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:
       - "6010:80"
-
+    depends_on:
+      - rabbitmq
+      - zipkin
 
   issuegenerator:
     image: ${DOCKER_REGISTRY-}issuegenerator
     build:
       context: .
       dockerfile: IssueGenerator/IssueGenerator/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
+      - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:
@@ -81,6 +143,8 @@ services:
     build:
       context: .
       dockerfile: PrioritySetter/PrioritySetter/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
     expose:
       - "80"
     ports:
@@ -92,6 +156,8 @@ services:
     build:
       context: .
       dockerfile: ReportService/ReportService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
     expose:
       - "80"
     ports:
@@ -103,6 +169,8 @@ services:
     build:
       context: .
       dockerfile: HealthMonitoring/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
     expose:
       - "80"
     ports:
@@ -114,6 +182,8 @@ services:
     build:
       context: .
       dockerfile: Clients/EmployerWebApp/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Compose
     expose:
       - "80"
     ports:
@@ -126,6 +196,7 @@ services:
       context: .
       dockerfile: Clients/EmployeeConsoleApp/Dockerfile
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - EventBusRabbitMQSettings__Connection=amqp://guest:guest@demo-rabbit:5672
       - EventBusRabbitMQSettings__RetryCount=5
       - EventBusRabbitMQSettings__SubscriptionClientName=employee
@@ -138,6 +209,7 @@ services:
       context: .
       dockerfile: Clients/EmployeeConsoleApp/Dockerfile
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - EventBusRabbitMQSettings__Connection=amqp://guest:guest@demo-rabbit:5672
       - EventBusRabbitMQSettings__RetryCount=5
       - EventBusRabbitMQSettings__SubscriptionClientName=employee

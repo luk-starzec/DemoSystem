@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TracingHelper;
 
 namespace DescriptionProvider
 {
@@ -27,6 +28,8 @@ namespace DescriptionProvider
             services.AddGrpc();
 
             services.AddHealthChecks();
+
+            services.AddZipkinTracing(typeof(Startup).Assembly.GetName().Name);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

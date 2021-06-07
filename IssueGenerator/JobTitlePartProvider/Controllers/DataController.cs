@@ -1,9 +1,9 @@
-﻿using JobTitleFirstPartProvider.Data;
+﻿using JobTitlePartProvider.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace JobTitleFirstPartProvider.Controllers
+namespace JobTitlePartProvider.Controllers
 {
     [ApiController]
     [Route("[controller]")]
