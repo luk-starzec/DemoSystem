@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EmployerWebApp.Models
+namespace EmployerWebApp.ViewModels
 {
     public class IssueLogViewModel
     {

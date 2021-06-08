@@ -1,6 +1,11 @@
 ﻿using EmployerWebApp.Helpers;
-using EmployerWebApp.Models;
+using EmployerWebApp.ViewModels;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -27,6 +32,8 @@ namespace EmployerWebApp.Services
                 RandomWordsCount = issueGeneration.RandomizeWordsCount,
                 TextSourceId = issueGeneration.TextSourceId > 0 ? issueGeneration.TextSourceId : (int?)null,
             };
+
+            Activity.Current = null;
             await client.PostAsJsonAsync("/api/issue", model);
         }
     }

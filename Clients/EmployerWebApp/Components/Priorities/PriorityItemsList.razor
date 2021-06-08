@@ -2,13 +2,16 @@
 
     <summary class="bg-secondary text-white d-flex justify-content-center align-items-center rounded"
              @onclick="() => details = !details" @onclick:preventDefault="true">
+
         <h4 class="m-0 p-2 text-center flex-grow-1">
-            @HeaderText
+            @Model.Group.Header
         </h4>
-        <button class="btn btn-sm btn-outline-light mr-2" title="add new item" 
+        
+        <button class="btn btn-sm btn-outline-light mr-2" title="add new item"
                 @onclick="ShowNewRow" @onclick:stopPropagation="true">
             <span class="oi oi-plus"></span>
         </button>
+
     </summary>
 
     <div class="position-relative">
@@ -76,18 +79,14 @@
 
 @code {
     [Parameter]
-    public string HeaderText { get; set; }
-    [Parameter]
-    public List<PriorityViewModel> Items { get; set; }
-    [Parameter]
-    public List<string> Names { get; set; }
+    public PriorityListViewModel Model { get; set; }
 
     [Parameter]
-    public EventCallback<PriorityViewModel> OnAdd { get; set; }
+    public EventCallback<(PriorityViewModel, PriorityGroupViewModel)> OnAdd { get; set; }
     [Parameter]
-    public EventCallback<PriorityViewModel> OnSave { get; set; }
+    public EventCallback<(PriorityViewModel, PriorityGroupViewModel)> OnSave { get; set; }
     [Parameter]
-    public EventCallback<PriorityViewModel> OnDelete { get; set; }
+    public EventCallback<(PriorityViewModel, PriorityGroupViewModel)> OnDelete { get; set; }
 
     string searchText = "";
 
@@ -95,19 +94,23 @@
     bool isNormal = true;
     bool isHigh = true;
 
-    IEnumerable<PriorityViewModel> filteredItems => Items.Where(r => IsMatchingItem(r)).OrderBy(r => r.Name);
+    IEnumerable<PriorityViewModel> filteredItems 
+        => Model.Items.Where(r => IsMatchingItem(r)).OrderBy(r => r.Name);
 
-    List<string> availableNames => Names.Where(r => !isNameUsed(r)).OrderBy(r => r).ToList();
+    List<string> availableNames
+        => new List<string> { null }
+            .Union(Model.Group.Keys.Where(r => !isNameUsed(r)).OrderBy(r => r))
+            .ToList();
 
     bool edit;
     bool processing;
     bool details;
     bool newRowDetails;
 
-    async Task InvokeAction(EventCallback<PriorityViewModel> action, PriorityViewModel viewModel)
+    async Task InvokeAction(EventCallback<(PriorityViewModel, PriorityGroupViewModel)> action, PriorityViewModel item)
     {
         processing = true;
-        await action.InvokeAsync(viewModel);
+        await action.InvokeAsync((item, Model.Group));
         processing = false;
     }
 
@@ -132,7 +135,7 @@
         return true;
     }
 
-    bool isNameUsed(string name) => Items.Any(r => r.Name == name);
+    bool isNameUsed(string name) => Model.Items.Any(r => r.Name == name);
 
     void ChangeEdit()
     {

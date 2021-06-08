@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EmployerWebApp.Models
+namespace EmployerWebApp.ViewModels
 {
     public class IssueViewModel
     {

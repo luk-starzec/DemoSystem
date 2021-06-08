@@ -1,4 +1,4 @@
-﻿namespace EmployerWebApp.Models
+﻿namespace EmployerWebApp.ViewModels
 {
     public class ServiceUrls
     {

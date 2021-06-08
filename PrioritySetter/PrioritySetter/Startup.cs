@@ -1,4 +1,5 @@
 using BasicIntegrationEventService;
+using EnvironmentHelper;
 using EventBus;
 using EventBusRabbitMQ;
 using HealthChecksHelper;
@@ -21,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TracingHelper;
 
 namespace PrioritySetter
 {
@@ -57,11 +59,13 @@ namespace PrioritySetter
             });
 
             services.AddCustomHealthChecks(Configuration);
+
+            services.AddZipkinTracing(typeof(Startup).Assembly.GetName().Name);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Compose"))
+            if (env.IsDevelopment() || env.IsDockerCompose())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

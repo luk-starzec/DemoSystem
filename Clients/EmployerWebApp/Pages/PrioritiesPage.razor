@@ -6,90 +6,53 @@
 
 <main class="content p-3">
 
-    @if (titlePriorities is null)
+    @if (items is null)
     {
         <LoadingPanel />
     }
     else
     {
-        <PriorityItemsList HeaderText="Titles" Names="titles" Items="titlePriorities"
-                           OnAdd="AddTitle" OnSave="SaveTitle" OnDelete="DeleteTitle" />
-    }
-
-    @if (appPriorities is null)
-    {
-        <LoadingPanel />
-    }
-    else
-    {
-        <PriorityItemsList HeaderText="Apps" Names="apps" Items="appPriorities"
-                           OnAdd="AddApp" OnSave="SaveApp" OnDelete="DeleteApp" />
+        foreach (var item in items)
+        {
+            <PriorityItemsList Model="item" OnAdd="AddTitle" OnSave="SaveTitle" OnDelete="DeleteTitle" />
+        }
     }
 
 </main>
 
 @code {
-    List<PriorityViewModel> titlePriorities;
-    List<string> titles;
-    List<PriorityViewModel> appPriorities;
-    List<string> apps;
+    List<PriorityListViewModel> items;
 
     protected override async Task OnInitializedAsync()
     {
-        titles = await priorityService.GetTitlesAsync();
-        titles.Insert(0, null);
-
-        titlePriorities = await priorityService.GetTitlePrioritiesAsync();
-
-        apps = await priorityService.GetAppsAsync();
-        apps.Insert(0, null);
-
-        appPriorities = await priorityService.GetAppPrioritiesAsync();
+        items = await priorityService.GetPriorityTypesAsync();
     }
 
-    async Task AddTitle(PriorityViewModel viewModel)
+    async Task AddTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.AddTitlePriorityAsync(viewModel);
+        await priorityService.AddPriorityAsync(parameters.item, parameters.group);
 
-        titlePriorities.Add(viewModel);
+        var list = GetItemList(parameters.group.Header);
+        list.Add(parameters.item);
     }
 
-    async Task SaveTitle(PriorityViewModel viewModel)
+    async Task SaveTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.SaveTitlePriorityAsync(viewModel);
+        await priorityService.SavePriorityAsync(parameters.item, parameters.group);
 
-        var item = titlePriorities.Where(r => r.Name == viewModel.Name).Single();
-        item.PriorityLevel = viewModel.PriorityLevel;
+        var item = GetItem(parameters.group.Header, parameters.item.Name);
+        item.PriorityLevel = parameters.item.PriorityLevel;
     }
 
-    async Task DeleteTitle(PriorityViewModel viewModel)
+    async Task DeleteTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.DeleteTitlePriorityAsync(viewModel);
+        await priorityService.DeletePriorityAsync(parameters.item, parameters.group);
 
-        var item = titlePriorities.Where(r => r.Name == viewModel.Name).Single();
-        titlePriorities.Remove(item);
+        var list = GetItemList(parameters.group.Header);
+        var item = GetItem(parameters.group.Header, parameters.item.Name);
+        list.Remove(item);
     }
 
-    async Task AddApp(PriorityViewModel viewModel)
-    {
-        await priorityService.AddAppPriorityAsync(viewModel);
-
-        appPriorities.Add(viewModel);
-    }
-
-    async Task SaveApp(PriorityViewModel viewModel)
-    {
-        await priorityService.SaveAppPriorityAsync(viewModel);
-
-        var item = appPriorities.Where(r => r.Name == viewModel.Name).Single();
-        item.PriorityLevel = viewModel.PriorityLevel;
-    }
-
-    async Task DeleteApp(PriorityViewModel viewModel)
-    {
-        await priorityService.DeleteAppPriorityAsync(viewModel);
-
-        var item = appPriorities.Where(r => r.Name == viewModel.Name).Single();
-        appPriorities.Remove(item);
-    }
+    List<PriorityViewModel> GetItemList(string header) => items.Where(r => r.Group.Header == header).Single().Items;
+    PriorityViewModel GetItem(string header, string name) => GetItemList(header).Where(r => r.Name == name).Single();
 }

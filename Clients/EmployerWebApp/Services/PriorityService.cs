@@ -1,6 +1,9 @@
-﻿using EmployerWebApp.Helpers;
-using EmployerWebApp.Models;
+﻿using EmployerWebApp.ApiModels;
+using EmployerWebApp.Helpers;
+using EmployerWebApp.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -17,84 +20,78 @@ namespace EmployerWebApp.Services
             this.clientFactory = clientFactory;
         }
 
-        public async Task<List<PriorityViewModel>> GetTitlePrioritiesAsync()
-        {
-            var client = GetPrioritySetterClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<TitlePriorityApiModel>>("/api/title");
-            return response.Select(r => r.ToPriorityModel()).ToList();
-        }
-
-        public async Task<List<PriorityViewModel>> GetAppPrioritiesAsync()
-        {
-            var client = GetPrioritySetterClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<AppPriorityApiModel>>("/api/app");
-            return response.Select(r => r.ToPriorityModel()).ToList();
-        }
-
-        public async Task<List<string>> GetTitlesAsync()
-        {
-            var client = GetHeaderProviderClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<string>>("/api/header/titles");
-            return response.ToList();
-        }
-
-        public async Task<List<string>> GetAppsAsync()
-        {
-            var client = GetHeaderProviderClient();
-            var response = await client.GetFromJsonAsync<IEnumerable<string>>("/api/header/apps");
-            return response.ToList();
-        }
-
-        public async Task AddTitlePriorityAsync(PriorityViewModel priorityModel)
-        {
-            var model = new TitlePriorityApiModel
-            {
-                Title = priorityModel.Name,
-                PriorityLevelId = (int)priorityModel.PriorityLevel,
-            };
-            var client = GetPrioritySetterClient();
-            await client.PostAsJsonAsync("/api/title", model);
-        }
-
-        public async Task SaveTitlePriorityAsync(PriorityViewModel viewModel)
-        {
-            var client = GetPrioritySetterClient();
-            await client.PutAsJsonAsync($"/api/title/{viewModel.Name}", viewModel.PriorityLevel);
-        }
-
-        public async Task DeleteTitlePriorityAsync(PriorityViewModel viewModel)
-        {
-            var client = GetPrioritySetterClient();
-            await client.DeleteAsync($"/api/title/{viewModel.Name}");
-        }
-
-        public async Task AddAppPriorityAsync(PriorityViewModel viewModel)
-        {
-            var model = new AppPriorityApiModel
-            {
-                App = viewModel.Name,
-                PriorityLevelId = (int)viewModel.PriorityLevel,
-            };
-            var client = GetPrioritySetterClient();
-            await client.PostAsJsonAsync("/api/app", model);
-        }
-
-        public async Task SaveAppPriorityAsync(PriorityViewModel viewModel)
-        {
-            var client = GetPrioritySetterClient();
-            await client.PutAsJsonAsync($"/api/app/{viewModel.Name}", viewModel.PriorityLevel);
-        }
-
-        public async Task DeleteAppPriorityAsync(PriorityViewModel viewModel)
-        {
-            var client = GetPrioritySetterClient();
-            await client.DeleteAsync($"/api/app/{viewModel.Name}");
-        }
-
-        private HttpClient GetPrioritySetterClient() 
+        private HttpClient GetPrioritySetterClient()
             => clientFactory.CreateClient(HttpClientNames.PrioritySetterClient);
 
-        private HttpClient GetHeaderProviderClient() 
+        private HttpClient GetHeaderProviderClient()
             => clientFactory.CreateClient(HttpClientNames.HeaderProviderClient);
+
+
+        public async Task<List<PriorityListViewModel>> GetPriorityTypesAsync()
+        {
+            var priorityCient = GetPrioritySetterClient();
+            var headerClient = GetHeaderProviderClient();
+
+            Activity.Current = null;
+            return new List<PriorityListViewModel>
+            {
+                new(){
+                    Group = new ()
+                    {
+                        Header = "Title",
+                        Keys = await GetKeysAsync(headerClient,"title"),
+                        ApiPath = "title",
+                        ApiModelType = typeof(TitlePriorityApiModel),
+                    },
+                    Items = await GetItemsAsync<TitlePriorityApiModel>(priorityCient,"title"),
+                },
+                new(){
+                    Group = new ()
+                    {
+                        Header = "App",
+                        Keys = await GetKeysAsync(headerClient,"app"),
+                        ApiPath = "app",
+                        ApiModelType = typeof(AppPriorityApiModel),
+                    },
+                    Items = await GetItemsAsync<AppPriorityApiModel>(priorityCient,"app"),
+                },
+            };
+        }
+
+        private async Task<List<PriorityViewModel>> GetItemsAsync<T>(HttpClient client, string path) where T : IApiModel
+        {
+            var response = await client.GetFromJsonAsync<IEnumerable<T>>($"/api/{path}");
+            return response.Select(r => r.ToViewModel()).ToList();
+        }
+
+        private async Task<List<string>> GetKeysAsync(HttpClient client, string path)
+        {
+            var response = await client.GetFromJsonAsync<IEnumerable<string>>($"/api/header/{path}");
+            return response.ToList();
+        }
+
+
+        public async Task AddPriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        {
+            var model = Activator.CreateInstance(group.ApiModelType, item);
+            var client = GetPrioritySetterClient();
+            Activity.Current = null;
+            await client.PostAsJsonAsync($"/api/{group.ApiPath}", model);
+        }
+
+        public async Task SavePriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        {
+            var client = GetPrioritySetterClient();
+            Activity.Current = null;
+            await client.PutAsJsonAsync($"/api/{group.ApiPath}/{item.Name}", item.PriorityLevel);
+        }
+
+        public async Task DeletePriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        {
+            var client = GetPrioritySetterClient();
+            Activity.Current = null;
+            await client.DeleteAsync($"/api/{group.ApiPath}/{item.Name}");
+        }
+
     }
 }

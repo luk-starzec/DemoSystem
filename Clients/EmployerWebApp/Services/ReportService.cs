@@ -1,5 +1,5 @@
 ﻿using EmployerWebApp.Helpers;
-using EmployerWebApp.Models;
+using EmployerWebApp.ViewModels;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http;

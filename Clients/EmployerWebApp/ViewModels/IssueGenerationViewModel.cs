@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace EmployerWebApp.Models
+namespace EmployerWebApp.ViewModels
 {
     public class IssueGenerationViewModel
     {

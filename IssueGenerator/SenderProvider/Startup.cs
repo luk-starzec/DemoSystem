@@ -1,3 +1,4 @@
+using EnvironmentHelper;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -51,7 +52,7 @@ namespace SenderProvider
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsDockerCompose())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

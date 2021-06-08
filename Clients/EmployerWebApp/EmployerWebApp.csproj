@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Helpers\EnvironmentHelper\EnvironmentHelper.csproj" />
+    <ProjectReference Include="..\..\Helpers\TracingHelper\TracingHelper.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="Protos\description.proto" GrpcServices="Client" />
   </ItemGroup>
 

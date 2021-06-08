@@ -2,12 +2,14 @@
 using System;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TracingHelper
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddZipkinTracing(this IServiceCollection services, string serviceName)
+        public static IServiceCollection AddZipkinTracing(this IServiceCollection services, string serviceName, List<string> ignoredPaths = null)
         {
             services.AddOpenTelemetryTracing(builder =>
             {
@@ -16,7 +18,9 @@ namespace TracingHelper
                     .AddAspNetCoreInstrumentation(options
                     => options.Filter = (httpContext) =>
                     {
-                        return !httpContext.Request.Path.Value.StartsWith("/health");
+                        var paths = ignoredPaths ?? defaultIgnoredPaths;
+                        var ignore = paths.Any(r => httpContext.Request.Path.Value.StartsWith(r));
+                        return !ignore;
                     })
                     .SetSampler(new AlwaysOnSampler())
                     .AddZipkinExporter(options =>
@@ -28,5 +32,11 @@ namespace TracingHelper
 
             return services;
         }
+
+        private static List<string> defaultIgnoredPaths = new()
+        {
+            "/health",
+            "/swagger"
+        };
     }
 }

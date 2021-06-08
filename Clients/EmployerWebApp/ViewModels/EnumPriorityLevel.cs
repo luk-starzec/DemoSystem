@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace EmployerWebApp.Models
+namespace EmployerWebApp.ViewModels
 {
     public enum EnumPriorityLevel
     {

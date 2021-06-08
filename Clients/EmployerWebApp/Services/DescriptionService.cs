@@ -1,5 +1,5 @@
 ﻿using DescriptionProvider;
-using EmployerWebApp.Models;
+using EmployerWebApp.ViewModels;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;

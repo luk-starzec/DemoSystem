@@ -29,13 +29,13 @@ namespace HeaderProvider.Controllers
             return service.GetHeader();
         }
 
-        [HttpGet("apps")]
+        [HttpGet("app")]
         public ActionResult<IEnumerable< string>> GetApps()
         {
             return service.GetApps();
         }
 
-        [HttpGet("titles")]
+        [HttpGet("title")]
         public ActionResult<IEnumerable< string>> GetTitles()
         {
             return service.GetTitles();

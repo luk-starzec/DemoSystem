@@ -1,4 +1,4 @@
-﻿using EmployerWebApp.Models;
+﻿using EmployerWebApp.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

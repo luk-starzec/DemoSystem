@@ -145,6 +145,7 @@ services:
       dockerfile: PrioritySetter/PrioritySetter/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
+      - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:
@@ -184,6 +185,7 @@ services:
       dockerfile: Clients/EmployerWebApp/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Compose
+      - ZIPKIN_HOSTNAME=zipkin
     expose:
       - "80"
     ports:

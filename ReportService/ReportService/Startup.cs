@@ -16,6 +16,7 @@ using ReportService.IntegrationEvents.EventHandlers;
 using EventBus;
 using ReportService.IntegrationEvents.Events;
 using ReportService.Services;
+using EnvironmentHelper;
 
 namespace ReportService
 {
@@ -52,7 +53,7 @@ namespace ReportService
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Compose"))
+            if (env.IsDevelopment() || env.IsDockerCompose())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();

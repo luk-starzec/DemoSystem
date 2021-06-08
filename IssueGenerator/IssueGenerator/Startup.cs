@@ -1,4 +1,5 @@
 using BasicIntegrationEventService;
+using EnvironmentHelper;
 using EventBus;
 using EventBusRabbitMQ;
 using Google.Protobuf.WellKnownTypes;
@@ -74,7 +75,7 @@ namespace IssueGenerator
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Compose"))
+            if (env.IsDevelopment() || env.IsDockerCompose())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -91,16 +92,7 @@ namespace IssueGenerator
             });
 
             app.UseCustomHealthChecks();
-
-            ConfigureEventBus(app);
         }
-
-        private void ConfigureEventBus(IApplicationBuilder app)
-        {
-            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            //eventBus.Subscribe<IssueCreatedIntegrationEvent, IssueCreatedIntegrationEventHandler>();
-        }
-
     }
 
     public static class CustomExtensionMethods

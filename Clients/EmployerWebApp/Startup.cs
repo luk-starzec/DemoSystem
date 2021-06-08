@@ -1,6 +1,7 @@
 using EmployerWebApp.Helpers;
-using EmployerWebApp.Models;
+using EmployerWebApp.ViewModels;
 using EmployerWebApp.Services;
+using EnvironmentHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TracingHelper;
 
 namespace EmployerWebApp
 {
@@ -40,11 +42,13 @@ namespace EmployerWebApp
             services.AddTransient<IDescriptionService, DescriptionService>();
             services.AddTransient<IPriorityService, PriorityService>();
             services.AddTransient<IReportService, ReportService>();
+
+            services.AddZipkinTracing(typeof(Startup).Assembly.GetName().Name, new() { "/_", "/css", "/assets" });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Compose"))
+            if (env.IsDevelopment() || env.IsDockerCompose())
             {
                 app.UseDeveloperExceptionPage();
             }
