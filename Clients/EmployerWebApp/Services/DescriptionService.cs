@@ -17,7 +17,7 @@ namespace EmployerWebApp.Services
             descriptionProviderUrl = options.Value.DescriptionProviderUrl;
         }
 
-        public async Task<List<(string name, int id)>> GetDescriptionSourceNamesAsync()
+        public async Task<List<(string name, int id)>> GetNamesAsync()
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -32,7 +32,7 @@ namespace EmployerWebApp.Services
             return list;
         }
 
-        public async Task<List<DescriptionSourceViewModel>> GetDescriptionSourcesAsync()
+        public async Task<List<DescriptionViewModel>> GetAsync()
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -44,7 +44,7 @@ namespace EmployerWebApp.Services
                 .ToList();
         }
 
-        public async Task<DescriptionSourceViewModel> AddDescriptionSourceAsync(DescriptionSourceViewModel descriptionSource)
+        public async Task<DescriptionViewModel> CreateAsync(DescriptionViewModel descriptionSource)
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -59,7 +59,7 @@ namespace EmployerWebApp.Services
             return TextSourceReply2DescriptionSource(reply);
         }
 
-        public async Task DeleteDescriptionSourceAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
             var client = new Description.DescriptionClient(chanel);
@@ -68,7 +68,7 @@ namespace EmployerWebApp.Services
             var reply = await client.DeleteTextSourceAsync(request);
         }
 
-        private DescriptionSourceViewModel TextSourceReply2DescriptionSource(TextSourceReply textSourceReply)
+        private DescriptionViewModel TextSourceReply2DescriptionSource(TextSourceReply textSourceReply)
             => new()
             {
                 Id = textSourceReply.Id,

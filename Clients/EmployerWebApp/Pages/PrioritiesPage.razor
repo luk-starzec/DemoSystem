@@ -25,12 +25,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        items = await priorityService.GetPriorityTypesAsync();
+        items = await priorityService.GetListsAsync();
     }
 
     async Task AddTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.AddPriorityAsync(parameters.item, parameters.group);
+        await priorityService.CreateAsync(parameters.item, parameters.group);
 
         var list = GetItemList(parameters.group.Header);
         list.Add(parameters.item);
@@ -38,7 +38,7 @@
 
     async Task SaveTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.SavePriorityAsync(parameters.item, parameters.group);
+        await priorityService.UpdateAsync(parameters.item, parameters.group);
 
         var item = GetItem(parameters.group.Header, parameters.item.Name);
         item.PriorityLevel = parameters.item.PriorityLevel;
@@ -46,7 +46,7 @@
 
     async Task DeleteTitle((PriorityViewModel item, PriorityGroupViewModel group) parameters)
     {
-        await priorityService.DeletePriorityAsync(parameters.item, parameters.group);
+        await priorityService.DeleteAsync(parameters.item, parameters.group);
 
         var list = GetItemList(parameters.group.Header);
         var item = GetItem(parameters.group.Header, parameters.item.Name);

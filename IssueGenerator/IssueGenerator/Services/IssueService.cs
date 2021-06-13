@@ -14,9 +14,9 @@ namespace IssueGenerator.Services
 
         public IssueService(IHeaderService headerService, IDescriptionService descriptionService, ISenderService senderService)
         {
-            this.headerService = headerService;
-            this.descriptionService = descriptionService;
-            this.senderService = senderService;
+            this.headerService = headerService ?? throw new ArgumentNullException(nameof(headerService));
+            this.descriptionService = descriptionService ?? throw new ArgumentNullException(nameof(descriptionService));
+            this.senderService = senderService ?? throw new ArgumentNullException(nameof(senderService));
         }
 
         public async Task<IssueModel[]> GenerateIssues(GenerationOptions options)

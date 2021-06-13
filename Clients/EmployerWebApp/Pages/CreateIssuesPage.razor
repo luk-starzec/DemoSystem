@@ -15,7 +15,7 @@
     private async Task Generate(IssueGenerationViewModel model)
     {
         processing = true;
-        await issueService.GenerateIssuesAsync(model);
+        await issueService.GenerateAsync(model);
         processing = false;
     }
 }

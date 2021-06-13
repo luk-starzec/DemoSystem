@@ -4,7 +4,6 @@ using ReportService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReportService.Services
 {
@@ -23,7 +22,7 @@ namespace ReportService.Services
 
             if (existingIssue is null)
             {
-                existingIssue = new IssueModel
+                existingIssue = new()
                 {
                     Id = issue.Id,
                     Created = issue.Created
@@ -66,10 +65,10 @@ namespace ReportService.Services
 
             if (integrationEvent.GetType() == typeof(IssuePrioritySetIntegrationEvent))
                 return $"Priority set to: {((IssuePrioritySetIntegrationEvent)integrationEvent).Issue.Priority}";
-            
+
             if (integrationEvent.GetType() == typeof(IssueStartedIntegrationEvent))
                 return $"Started by: {((IssueStartedIntegrationEvent)integrationEvent).Issue.Employee}";
-            
+
             if (integrationEvent.GetType() == typeof(IssueCompletedIntegrationEvent))
                 return $"Completed by: {((IssueCompletedIntegrationEvent)integrationEvent).Issue.Employee}";
 

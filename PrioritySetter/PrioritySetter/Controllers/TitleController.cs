@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PrioritySetter.Data;
 using PrioritySetter.Helpers;
 using PrioritySetter.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrioritySetter.Controllers
 {
@@ -97,15 +96,9 @@ namespace PrioritySetter.Controllers
             return NoContent();
         }
 
-        private bool TitlePriorityExists(string title)
-        {
-            return _context.TitlePriority.Any(e => e.Title == title);
-        }
+        private bool TitlePriorityExists(string title) => _context.TitlePriority.Any(e => e.Title == title);
 
         private bool CheckPriority(int priorityId)
-        {
-            return Enum.GetValues(typeof(EnumPriorityLevel)).Cast<EnumPriorityLevel>()
-                .Any(r => priorityId == (int)r);
-        }
+            => Enum.GetValues(typeof(EnumPriorityLevel)).Cast<EnumPriorityLevel>().Any(r => priorityId == (int)r);
     }
 }

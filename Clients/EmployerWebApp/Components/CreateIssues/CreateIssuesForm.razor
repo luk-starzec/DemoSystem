@@ -1,6 +1,6 @@
 ﻿@inject IDescriptionService descriptionService
 
-@if (descriptionSources is null)
+@if (descriptions is null)
 {
     <LoadingPanel />
 }
@@ -9,7 +9,7 @@ else
     <EditForm Model="@model" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
 
-        <CreateIssuesFields @bind-Model="model" DescriptionSources="descriptionSources" Processing="@Processing" />
+        <CreateIssuesFields @bind-Model="model" DescriptionSources="descriptions" Processing="@Processing" />
 
         <button type="submit" class="btn btn-primary col mt-3" disabled="@Processing">
             @buttonText
@@ -24,14 +24,14 @@ else
     [Parameter]
     public EventCallback<IssueGenerationViewModel> OnValidSubmit { get; set; }
 
-    private List<(string name, int id)> descriptionSources;
+    private List<(string name, int id)> descriptions;
     private IssueGenerationViewModel model = new();
 
     string buttonText => Processing ? "Please wait..." : "Generate issues";
 
     protected override async Task OnInitializedAsync()
     {
-        descriptionSources = await descriptionService.GetDescriptionSourceNamesAsync();
+        descriptions = await descriptionService.GetNamesAsync();
 
         model.IssuesCount = 1;
         model.LimitWordsCount = true;

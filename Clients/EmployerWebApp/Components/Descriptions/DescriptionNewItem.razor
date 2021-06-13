@@ -34,9 +34,9 @@
 
 @code {
     [Parameter]
-    public EventCallback<DescriptionSourceViewModel> OnDescriptionSourceAdded { get; set; }
+    public EventCallback<DescriptionViewModel> OnDescriptionAdded { get; set; }
 
-    private DescriptionSourceViewModel model = new();
+    private DescriptionViewModel model = new();
 
     bool disableButton = false;
     string buttonText => disableButton ? "Wait..." : "Add";
@@ -45,9 +45,9 @@
     {
         disableButton = true;
 
-        var added = await descriptionService.AddDescriptionSourceAsync(model);
+        var added = await descriptionService.CreateAsync(model);
         model = new();
-        await OnDescriptionSourceAdded.InvokeAsync(added);
+        await OnDescriptionAdded.InvokeAsync(added);
 
         disableButton = false;
     }

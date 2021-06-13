@@ -1,10 +1,6 @@
 ﻿using EmployerWebApp.Helpers;
 using EmployerWebApp.ViewModels;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -23,7 +19,7 @@ namespace EmployerWebApp.Services
             this.logger = logger;
         }
 
-        public async Task GenerateIssuesAsync(IssueGenerationViewModel issueGeneration)
+        public async Task GenerateAsync(IssueGenerationViewModel issueGeneration)
         {
             var model = new
             {

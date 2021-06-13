@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace PrioritySetter.Services
 {
-    public interface IPriorityService
+    public interface IIssueService
     {
-        Task SetIssuePriority(IssueModel issue);
+        Task SetPriority(IssueModel issue);
     }
 }

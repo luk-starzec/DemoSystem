@@ -42,7 +42,7 @@ namespace PrioritySetter
                 options.UseSqlite("Data Source = prioritySetterDb.db");
             });
 
-            services.AddTransient<IPriorityService, PriorityService>();
+            services.AddTransient<IIssueService, IssueService>();
 
             var eventBusSettings = Configuration.GetSection(EventBusRabbitMQSettings.EventBusSettingsKey).Get<EventBusRabbitMQSettings>();
             services.AddEventBus(eventBusSettings);

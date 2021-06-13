@@ -27,7 +27,7 @@ namespace EmployerWebApp.Services
             => clientFactory.CreateClient(HttpClientNames.HeaderProviderClient);
 
 
-        public async Task<List<PriorityListViewModel>> GetPriorityTypesAsync()
+        public async Task<List<PriorityListViewModel>> GetListsAsync()
         {
             var priorityCient = GetPrioritySetterClient();
             var headerClient = GetHeaderProviderClient();
@@ -36,42 +36,35 @@ namespace EmployerWebApp.Services
             return new List<PriorityListViewModel>
             {
                 new(){
-                    Group = new ()
-                    {
-                        Header = "Title",
-                        Keys = await GetKeysAsync(headerClient,"title"),
-                        ApiPath = "title",
-                        ApiModelType = typeof(TitlePriorityApiModel),
-                    },
-                    Items = await GetItemsAsync<TitlePriorityApiModel>(priorityCient,"title"),
+                    Group = await GetGroup<TitlePriorityApiModel>("Title", headerClient),
+                    Items = await GetItemsAsync<TitlePriorityApiModel>("title",priorityCient),
                 },
                 new(){
-                    Group = new ()
-                    {
-                        Header = "App",
-                        Keys = await GetKeysAsync(headerClient,"app"),
-                        ApiPath = "app",
-                        ApiModelType = typeof(AppPriorityApiModel),
-                    },
-                    Items = await GetItemsAsync<AppPriorityApiModel>(priorityCient,"app"),
+                     Group = await GetGroup<AppPriorityApiModel>("App", headerClient),
+                    Items = await GetItemsAsync<AppPriorityApiModel>("app",priorityCient),
                 },
             };
         }
 
-        private async Task<List<PriorityViewModel>> GetItemsAsync<T>(HttpClient client, string path) where T : IApiModel
+        private async Task<PriorityGroupViewModel> GetGroup<T>(string header, HttpClient headerClient) where T : IApiModel
+        {
+            var keys = await headerClient.GetFromJsonAsync<IEnumerable<string>>($"/api/header/{header}");
+            return new PriorityGroupViewModel
+            {
+                Header = header,
+                Keys = keys.ToList(),
+                ApiPath = header,
+                ApiModelType = typeof(T),
+            };
+        }
+
+        private async Task<List<PriorityViewModel>> GetItemsAsync<T>(string path, HttpClient client) where T : IApiModel
         {
             var response = await client.GetFromJsonAsync<IEnumerable<T>>($"/api/{path}");
             return response.Select(r => r.ToViewModel()).ToList();
         }
 
-        private async Task<List<string>> GetKeysAsync(HttpClient client, string path)
-        {
-            var response = await client.GetFromJsonAsync<IEnumerable<string>>($"/api/header/{path}");
-            return response.ToList();
-        }
-
-
-        public async Task AddPriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        public async Task CreateAsync(PriorityViewModel item, PriorityGroupViewModel group)
         {
             var model = Activator.CreateInstance(group.ApiModelType, item);
             var client = GetPrioritySetterClient();
@@ -79,14 +72,14 @@ namespace EmployerWebApp.Services
             await client.PostAsJsonAsync($"/api/{group.ApiPath}", model);
         }
 
-        public async Task SavePriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        public async Task UpdateAsync(PriorityViewModel item, PriorityGroupViewModel group)
         {
             var client = GetPrioritySetterClient();
             Activity.Current = null;
             await client.PutAsJsonAsync($"/api/{group.ApiPath}/{item.Name}", item.PriorityLevel);
         }
 
-        public async Task DeletePriorityAsync(PriorityViewModel item, PriorityGroupViewModel group)
+        public async Task DeleteAsync(PriorityViewModel item, PriorityGroupViewModel group)
         {
             var client = GetPrioritySetterClient();
             Activity.Current = null;

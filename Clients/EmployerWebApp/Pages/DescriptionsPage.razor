@@ -5,7 +5,7 @@
 
 <main class="content p-5">
 
-    @if (descriptionSources is null)
+    @if (descriptions is null)
     {
         <div class="alert alert-primary">
             Loading data...
@@ -13,30 +13,30 @@
     }
     else
     {
-        @foreach (var descriptionSource in descriptionSources)
+        @foreach (var description in descriptions)
         {
-            <DescriptionSourceItem DescriptionSource="descriptionSource" OnDescriptionSourceDeleted="DescriptionSourceDeleted" />
+            <DescriptionItem Description="description" OnDescriptionDeleted="DescriptionDeleted" />
         }
-        <DescriptionSourceNewItem OnDescriptionSourceAdded="DescriptionSourceAdded" />
+        <DescriptionNewItem OnDescriptionAdded="DescriptionAdded" />
     }
 
 </main>
 
 @code {
-    private List<DescriptionSourceViewModel> descriptionSources;
+    private List<DescriptionViewModel> descriptions;
 
     protected override async Task OnInitializedAsync()
     {
-        descriptionSources = await descriptionService.GetDescriptionSourcesAsync();
+        descriptions = await descriptionService.GetAsync();
     }
 
-    private void DescriptionSourceAdded(DescriptionSourceViewModel descriptionSource)
+    private void DescriptionAdded(DescriptionViewModel description)
     {
-        descriptionSources.Add(descriptionSource);
+        descriptions.Add(description);
     }
 
-    private async Task DescriptionSourceDeleted()
+    private async Task DescriptionDeleted()
     {
-        descriptionSources = await descriptionService.GetDescriptionSourcesAsync();
+        descriptions = await descriptionService.GetAsync();
     }
 }

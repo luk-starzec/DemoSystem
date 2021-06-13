@@ -35,18 +35,5 @@ namespace IssueGenerator.Services
             var reply = await client.GetTextAsync(request);
             return reply.Text;
         }
-
-        public async Task Test()
-        {
-            using var chanel = GrpcChannel.ForAddress(descriptionProviderUrl);
-            var client = new Description.DescriptionClient(chanel);
-
-            using var reply = client.GetTextSourcesStream(new Google.Protobuf.WellKnownTypes.Empty());
-            while (await reply.ResponseStream.MoveNext())
-            {
-                var current = reply.ResponseStream.Current;
-                Console.WriteLine(current.Name);
-            }
-        }
     }
 }

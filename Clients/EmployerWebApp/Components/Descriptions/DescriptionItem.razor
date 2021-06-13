@@ -4,14 +4,14 @@
 
     <summary class="d-flex bg-secondary p-2 text-white">
         <span class="oi oi-align-left"></span>
-        <span class="col">@DescriptionSource.Name [id @DescriptionSource.Id]</span>
-        <span class="col text-right">(@DescriptionSource.WordsCount words)</span>
+        <span class="col">@Description.Name [id @Description.Id]</span>
+        <span class="col text-right">(@Description.WordsCount words)</span>
     </summary>
 
     <div class="p-3">
 
         <p class="col mb-3">
-            @DescriptionSource.Text
+            @Description.Text
         </p>
 
         <div class="d-flex justify-content-end mr-2 align-items-center">
@@ -44,9 +44,9 @@
 
 @code {
     [Parameter]
-    public DescriptionSourceViewModel DescriptionSource { get; set; }
+    public DescriptionViewModel Description { get; set; }
     [Parameter]
-    public EventCallback OnDescriptionSourceDeleted { get; set; }
+    public EventCallback OnDescriptionDeleted { get; set; }
 
     bool disableButton = false;
     string buttonText => disableButton ? "Wait..." : "Delete";
@@ -62,8 +62,8 @@
         disableButton = true;
         confirmVisible = false;
 
-        await descriptionService.DeleteDescriptionSourceAsync(DescriptionSource.Id);
-        await OnDescriptionSourceDeleted.InvokeAsync();
+        await descriptionService.DeleteAsync(Description.Id);
+        await OnDescriptionDeleted.InvokeAsync();
 
         disableButton = false;
     }

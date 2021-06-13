@@ -20,9 +20,6 @@ namespace IssueGenerator.Services
 
         public async Task<string> GetSender()
         {
-            //var result = await client.GetStringAsync("/api/sender");
-            //var model = JsonSerializer.Deserialize<SenderModel>(result,
-            //    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             var model = await client.GetFromJsonAsync<SenderModel>("/api/sender");
             return $"{model.Name}{Environment.NewLine}{model.JobTitle}";
         }

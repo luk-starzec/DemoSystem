@@ -12,9 +12,9 @@ namespace PrioritySetter.IntegrationEvents.EventHandlers
 {
     public class IssueCreatedIntegrationEventHandler : IIntegrationEventHandler<IssueCreatedIntegrationEvent>
     {
-        private readonly IPriorityService priorityService;
+        private readonly IIssueService priorityService;
 
-        public IssueCreatedIntegrationEventHandler(IPriorityService priorityService)
+        public IssueCreatedIntegrationEventHandler(IIssueService priorityService)
         {
             this.priorityService = priorityService;
         }
@@ -26,7 +26,7 @@ namespace PrioritySetter.IntegrationEvents.EventHandlers
 
             await Task.Delay(3000);
 
-            await priorityService.SetIssuePriority(issue);
+            await priorityService.SetPriority(issue);
         }
 
         //public async Task Handle(IssueCreatedIntegrationEvent @event)
