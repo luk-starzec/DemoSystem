@@ -24,9 +24,15 @@ namespace IssueGenerator.Services
             var result = new List<IssueModel>();
             for (int i = 0; i < options.IssuesCount; i++)
             {
-                var header = await headerService.GetHeader();
-                var description = await descriptionService.GetDescriptionAsync(options.TextSourceId, options.WordsLimit, options.RandomWordsCount);
-                var sender = await senderService.GetSender();
+                var headerTask = headerService.GetHeader();
+                var descriptionTask = descriptionService.GetDescriptionAsync(options.TextSourceId, options.WordsLimit, options.RandomWordsCount);
+                var senderTask = senderService.GetSender();
+
+                await Task.WhenAll(headerTask, descriptionTask, senderTask);
+
+                var header = headerTask.Result;
+                var description = descriptionTask.Result;
+                var sender = senderTask.Result;
 
                 var issue = new IssueModel
                 {
